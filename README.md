@@ -5,6 +5,8 @@ I create `makin` to make initial malware assessment little bit easier for me, I 
 ### How does it work?
 `makin` opens a sample as a debuggee and injects `asho.dll`, `asho.dll` hooks several functions at `ntdll.dll` library and after parameters checkings, it sends the corresponding message to the debugger (`makin.exe`).
 
+For hooking, it uses [Capstone engine](http://www.capstone-engine.org/), which makes hooking much stealthier.
+
 At this moment, `makin` can reveal following techniques: 
 
 `Note`: Use [`The “Ultimate” Anti-Debugging  Reference` as a reference](https://web.archive.org/web/20171212061916/http://pferrie.host22.com/papers/antidebug.pdf)
@@ -23,7 +25,7 @@ At this moment, `makin` can reveal following techniques:
 That's all for now, you can add as much as you wish :) 
 
 ### TODO: 
-* Use a disassembler such as [capstone](http://www.capstone-engine.org/) to hook little bit deeper and avoid simple hook checks.
+* [DONE] Use a disassembler such as [capstone](http://www.capstone-engine.org/) to hook little bit deeper and avoid simple hook checks.
 
 * At this moment, `makin` does not support child processes.
 
