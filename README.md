@@ -1,6 +1,6 @@
 I create `makin` to make initial malware assessment little bit easier for me, I think it's useful for others as well, It helps to reveal a debugger detection techniques used by a sample.
 
-#### Note: Only supports x64
+#### Note: ~~Only supports x64~~ Supports x64 and x86
 
 ### How does it work?
 `makin` opens a sample as a debuggee and injects `asho.dll`, `asho.dll` hooks several functions at `ntdll.dll` library and after parameters checkings, it sends the corresponding message to the debugger (`makin.exe`).
@@ -25,13 +25,13 @@ At this moment, `makin` can reveal following techniques:
 That's all for now, you can add as much as you wish :) 
 
 ### TODO: 
-* [DONE] Use a disassembler such as [capstone](http://www.capstone-engine.org/) to hook little bit deeper and avoid simple hook checks.
+* [DONE] ~~Use a disassembler such as [capstone](http://www.capstone-engine.org/) to hook little bit deeper and avoid simple hook checks.~~
 
 * At this moment, `makin` does not support child processes.
 
 * Add more tricks.
 
-* x86 support
+* [DONE]~~x86 support~~
 
 ##### DEMO: `NtCreateThreadEx`:
 
