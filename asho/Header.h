@@ -167,3 +167,26 @@ typedef struct _PEB {
 } PEB, *PPEB;
 
 
+typedef enum _DEBUG_CONTROL_CODE {
+	DebugSysGetTraceInformation = 1,
+	DebugSysSetInternalBreakpoint,
+	DebugSysSetSpecialCall,
+	DebugSysClerSpecialCalls,
+	DebugSysQuerySpecialCalls,
+	DebugSysBreakpointWithStatus,
+	DebugSysGetVersion,
+	DebugSysReadVirtual,
+	DebugSysWriteVirtual,
+	DebugSysReadPhysical,
+	DebugSysWritePhysical,
+	DebugSysReadControlSpace,
+	DebugSysWriteControlSpace,
+	DebugSysReadIoSpace,
+	DebugSysSysWriteIoSpace,
+	DebugSysReadMsr,
+	DebugSysWriteMsr,
+	DebugSysReadBusData,
+	DebugSysWriteBusData,
+	DebugSysCheckLowMemory,
+} DEBUG_CONTROL_CODE;
+
