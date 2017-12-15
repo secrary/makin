@@ -2,6 +2,7 @@
 
 #define STATUS_SUCCESS                   0x00000000L  
 #define STATUS_ACCESS_DENIED             0xC0000022L
+#define STATUS_NO_YIELD_PERFORMED        0x40000024L
 
 typedef enum _PROCESSINFOCLASS {
 	ProcessBasicInformation = 0,
