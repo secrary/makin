@@ -22,6 +22,7 @@ At this moment, `makin` can reveal following techniques:
 * `NtCreateUserProcess` - ref: The "Ultimate" Anti-Debugging Reference 7.G.i
 * `NtCreateThreadEx` - ref: [ntuery blog post](https://web.archive.org/web/20171211143522/https://ntquery.wordpress.com/2014/03/29/anti-debug-ntcreatethreadex/)
 * `NtSystemDebugControl` - ref: [@waleedassar - pastebin](https://goo.gl/j4g5pV)
+* `NtYieldExecution` - ref: The "Ultimate" Anti-Debugging Reference 7.D.xiii
 
 That's all for now, you can add as much as you wish :) 
 
@@ -32,7 +33,7 @@ That's all for now, you can add as much as you wish :)
 
 * Add more tricks.
 
-* [DONE]~~x86 support~~
+* [DONE] ~~x86 support~~
 
 ##### DEMO: `NtCreateThreadEx`:
 
