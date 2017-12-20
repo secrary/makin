@@ -1,5 +1,7 @@
 I create `makin` to make initial malware assessment little bit easier for me, I think it's useful for others as well, It helps to reveal a debugger detection techniques used by a sample.
 
+##### Any feedback is greatly appreciated: [@_qaz_qaz](https://twitter.com/_qaz_qaz)
+
 #### Note: ~~Only supports x64~~ Supports x64 and x86
 
 ### How does it work?
