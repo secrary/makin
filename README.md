@@ -26,6 +26,7 @@ At this moment, `makin` can reveal following techniques:
 * `NtSystemDebugControl` - ref: [@waleedassar - pastebin](https://goo.gl/j4g5pV)
 * `NtYieldExecution` - ref: The "Ultimate" Anti-Debugging Reference 7.D.xiii
 * `NtSetLdtEntries` - ref: [ANTI-UNPACKER TRICKS: PART ONE - 2.1.2](https://web.archive.org/web/20171215191103/http://pferrie.tripod.com/papers/unpackers21.pdf)
+* `NtQueryInformationThread` ref: https://goo.gl/k4P2a3
 
 That's all for now, you can add as much as you wish :) 
 
@@ -38,6 +39,6 @@ That's all for now, you can add as much as you wish :)
 
 * [DONE] ~~x86 support~~
 
-##### DEMO: `NtCreateThreadEx`:
+##### DEMO:
 
 ![makin_demo](https://user-images.githubusercontent.com/16405698/33871171-c6f8a156-df2a-11e7-8ffb-b9ae5c030c48.gif)
