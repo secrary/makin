@@ -26,7 +26,7 @@ At this moment, `makin` can reveal following techniques:
 * `NtSystemDebugControl` - ref: [@waleedassar - pastebin](https://goo.gl/j4g5pV)
 * `NtYieldExecution` - ref: The "Ultimate" Anti-Debugging Reference 7.D.xiii
 * `NtSetLdtEntries` - ref: [ANTI-UNPACKER TRICKS: PART ONE - 2.1.2](https://web.archive.org/web/20171215191103/http://pferrie.tripod.com/papers/unpackers21.pdf)
-* `NtQueryInformationThread` ref: https://goo.gl/k4P2a3
+* `NtQueryInformationThread` ref: [ntquery - NtQueryInformationThread](https://web.archive.org/web/20180110063515/https://ntquery.wordpress.com/2014/03/29/anti-debug-ntsetinformationthread/)
 
 That's all for now, you can add as much as you wish :) 
 
