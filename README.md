@@ -39,6 +39,8 @@ That's all for now, you can add as much as you wish :)
 
 * [DONE] ~~x86 support~~
 
+* add anti-vm, anti-emulation tricks detection
+
 ##### DEMO:
 
 ![makin_demo](https://user-images.githubusercontent.com/16405698/33871171-c6f8a156-df2a-11e7-8ffb-b9ae5c030c48.gif)
