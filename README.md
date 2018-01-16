@@ -8,6 +8,7 @@ I create `makin` to make initial malware assessment little bit easier for me, I 
 `makin` opens a sample as a debuggee and injects `asho.dll`, `asho.dll` hooks several functions at `ntdll.dll` library and after parameters checkings, it sends the corresponding message to the debugger (`makin.exe`).
 
 For hooking, it uses [Capstone engine](http://www.capstone-engine.org/), which makes hooking much stealthier.
+
 `Note`: You can use [vcpkg](https://github.com/Microsoft/vcpkg) to get `Capstone`.
 
 At this moment, `makin` can reveal following techniques: 
