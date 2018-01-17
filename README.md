@@ -2,7 +2,7 @@ I create `makin` to make initial malware assessment little bit easier for me, I 
 
 ##### Any feedback is greatly appreciated: [@_qaz_qaz](https://twitter.com/_qaz_qaz)
 
-#### Note: ~~Only supports x64~~ Supports x64 and x86
+#### Note: ~~Only supports x64~~ Supports x64 and x86. Works on Windows 10.
 
 ### How does it work?
 `makin` opens a sample as a debuggee and injects `asho.dll`, `asho.dll` hooks several functions at `ntdll.dll` library and after parameters checkings, it sends the corresponding message to the debugger (`makin.exe`).
