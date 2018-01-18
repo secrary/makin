@@ -191,3 +191,20 @@ typedef enum _DEBUG_CONTROL_CODE {
 	DebugSysCheckLowMemory,
 } DEBUG_CONTROL_CODE;
 
+typedef enum _OBJECT_INFORMATION_CLASS
+{
+	ObjectBasicInformation, // OBJECT_BASIC_INFORMATION
+	ObjectNameInformation, // OBJECT_NAME_INFORMATION
+	ObjectTypeInformation, // OBJECT_TYPE_INFORMATION
+	ObjectTypesInformation, // OBJECT_TYPES_INFORMATION
+	ObjectHandleFlagInformation, // OBJECT_HANDLE_FLAG_INFORMATION
+	ObjectSessionInformation,
+	ObjectSessionObjectInformation,
+	MaxObjectInfoClass
+} OBJECT_INFORMATION_CLASS;
+
+typedef struct _OBJECT_TYPE_INFORMATION {
+	UNICODE_STRING TypeName;
+	ULONG TotalNumberOfHandles;
+	ULONG TotalNumberOfObjects;
+}OBJECT_TYPE_INFORMATION, *POBJECT_TYPE_INFORMATION;
