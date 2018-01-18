@@ -14,11 +14,11 @@ For hooking, it uses [Capstone engine](http://www.capstone-engine.org/), which m
 At this moment, `makin` can reveal following techniques: 
 
 `ntdll.dll`:
-* `NtClose`: ref: [The "Ultimate" Anti-Debugging Reference: 7.B.ii](https://web.archive.org/web/20171212061916/http://pferrie.host22.com/papers/antidebug.pdf)
-* `NtOpenProcess`: ref: [The "Ultimate" Anti-Debugging Reference: 7.B.i](https://web.archive.org/web/20171212061916/http://pferrie.host22.com/papers/antidebug.pdf)
-* `NtCreateFile`: ref: [The "Ultimate" Anti-Debugging Reference: 7.B.iii (Open itself)](https://web.archive.org/web/20171212061916/http://pferrie.host22.com/papers/antidebug.pdf)
-* `NtCreateFile`: ref: [The "Ultimate" Anti-Debugging Reference: 7.B.iii (Open a driver)](https://web.archive.org/web/20171212061916/http://pferrie.host22.com/papers/antidebug.pdf)
-* `LdrLoadDll`- ref: [The "Ultimate" Anti-Debugging Reference: 7.B.iv](https://web.archive.org/web/20171212061916/http://pferrie.host22.com/papers/antidebug.pdf)
+* `NtClose` - ref: [The "Ultimate" Anti-Debugging Reference: 7.B.ii](https://web.archive.org/web/20171212061916/http://pferrie.host22.com/papers/antidebug.pdf)
+* `NtOpenProcess` - ref: [The "Ultimate" Anti-Debugging Reference: 7.B.i](https://web.archive.org/web/20171212061916/http://pferrie.host22.com/papers/antidebug.pdf)
+* `NtCreateFile` - ref: [The "Ultimate" Anti-Debugging Reference: 7.B.iii (Open itself)](https://web.archive.org/web/20171212061916/http://pferrie.host22.com/papers/antidebug.pdf)
+* `NtCreateFile` - ref: [The "Ultimate" Anti-Debugging Reference: 7.B.iii (Open a driver)](https://web.archive.org/web/20171212061916/http://pferrie.host22.com/papers/antidebug.pdf)
+* `LdrLoadDll` - ref: [The "Ultimate" Anti-Debugging Reference: 7.B.iv](https://web.archive.org/web/20171212061916/http://pferrie.host22.com/papers/antidebug.pdf)
 * `NtSetDebugFilterState` - ref: [The "Ultimate" Anti-Debugging Reference: 7.D.vi](https://web.archive.org/web/20171212061916/http://pferrie.host22.com/papers/antidebug.pdf)
 * `NtQueryInformationProcess` - ref: [The "Ultimate" Anti-Debugging Reference: 7.D.viii.a, 7.D.viii.b, 7.D.viii.c](https://web.archive.org/web/20171212061916/http://pferrie.host22.com/papers/antidebug.pdf)
 * `NtQuerySystemInformation` - ref: [The "Ultimate" Anti-Debugging Reference: 7.E.iii](https://web.archive.org/web/20171212061916/http://pferrie.host22.com/papers/antidebug.pdf)
@@ -28,13 +28,13 @@ At this moment, `makin` can reveal following techniques:
 * `NtSystemDebugControl` - ref: [@waleedassar - pastebin](https://goo.gl/j4g5pV)
 * `NtYieldExecution` - ref: [The "Ultimate" Anti-Debugging Reference 7.D.xiii](https://web.archive.org/web/20171212061916/http://pferrie.host22.com/papers/antidebug.pdf)
 * `NtSetLdtEntries` - ref: [ANTI-UNPACKER TRICKS: PART ONE - 2.1.2](https://web.archive.org/web/20171215191103/http://pferrie.tripod.com/papers/unpackers21.pdf)
-* `NtQueryInformationThread` ref: [ntquery - NtQueryInformationThread](https://web.archive.org/web/20180110063515/https://ntquery.wordpress.com/2014/03/29/anti-debug-ntsetinformationthread/)
-* `NtCreateDebugObject` and `NtQueryObject`: ref: [Anti-Debug NtQueryObject](https://goo.gl/krE6JM)
-
+* `NtQueryInformationThread` - ref: [ntquery - NtQueryInformationThread](https://web.archive.org/web/20180110063515/https://ntquery.wordpress.com/2014/03/29/anti-debug-ntsetinformationthread/)
+* `NtCreateDebugObject` and `NtQueryObject` - ref: [Anti-Debug NtQueryObject](https://goo.gl/krE6JM)
+* `RtlAdjustPrivilege` - ref: [Using RtlAdjustPrivilege to detect debugger by insid3codeteam](https://goo.gl/m46tQe) 
 
 `kernelbase.dll`:
 * `IsDebuggerPresent` - ref: [MSDN](https://goo.gl/cg7Fkm)
-* `CheckRemoteDebuggerPresent` - ref [MSDN](https://goo.gl/LrUdaG)
+* `CheckRemoteDebuggerPresent` - ref: [MSDN](https://goo.gl/LrUdaG)
 
 That's all for now, you can add as much as you wish :) 
 
