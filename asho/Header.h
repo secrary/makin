@@ -208,3 +208,9 @@ typedef struct _OBJECT_TYPE_INFORMATION {
 	ULONG TotalNumberOfHandles;
 	ULONG TotalNumberOfObjects;
 }OBJECT_TYPE_INFORMATION, *POBJECT_TYPE_INFORMATION;
+
+typedef enum _SHUTDOWN_ACTION {
+	ShutdownNoReboot,
+	ShutdownReboot,
+	ShutdownPowerOff
+} SHUTDOWN_ACTION, *PSHUTDOWN_ACTION;
