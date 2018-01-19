@@ -11,6 +11,8 @@ For hooking, it uses [Capstone engine](http://www.capstone-engine.org/), which m
 
 `Note`: You can use [vcpkg](https://github.com/Microsoft/vcpkg) to get `Capstone`.
 
+`makin` also generates a script for IDA Pro to set breakpoints at detected APIs, [DEMO](https://youtu.be/6OLoRAEOVls)
+
 At this moment, `makin` can reveal following techniques: 
 
 `ntdll.dll`:
@@ -52,7 +54,7 @@ That's all for now, you can add as much as you wish :)
 
 * Add anti-vm, anti-emulation tricks detection
 
-* Generate IDA Pro script to set BPs at detected APIs
+* [DONE] ~~~Generate IDA Pro script to set BPs at detected APIs~~~
 
 ##### DEMO:
 
