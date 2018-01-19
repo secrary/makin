@@ -5,7 +5,7 @@ I create `makin` to make initial malware assessment little bit easier for me, I 
 #### Note: ~~Only supports x64~~ Supports x64 and x86. Works on Windows 10.
 
 ### How does it work?
-`makin` opens a sample as a debuggee and injects `asho.dll`, `asho.dll` hooks several functions at `ntdll.dll` and `kernelbase.dll` libraries and after parameters checkings, it sends the corresponding message to the debugger (`makin.exe`).
+`makin` opens a sample as a debuggee and injects `asho.dll`(main module renames all `dlls` before injection), `asho.dll` hooks several functions at `ntdll.dll` and `kernelbase.dll` libraries and after parameters checkings, it sends the corresponding message to the debugger (`makin.exe`).
 
 For hooking, it uses [Capstone engine](http://www.capstone-engine.org/), which makes hooking much stealthier.
 
@@ -51,6 +51,8 @@ That's all for now, you can add as much as you wish :)
 * [DONE] ~~~hook `kernelbase.dll`~~~
 
 * Add anti-vm, anti-emulation tricks detection
+
+* Generate IDA Pro script to set BPs at detected APIs
 
 ##### DEMO:
 
