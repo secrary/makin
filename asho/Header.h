@@ -214,3 +214,4 @@ typedef enum _SHUTDOWN_ACTION {
 	ShutdownReboot,
 	ShutdownPowerOff
 } SHUTDOWN_ACTION, *PSHUTDOWN_ACTION;
+
