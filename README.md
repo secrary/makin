@@ -39,7 +39,8 @@ At this moment, `makin` can reveal following techniques:
 * `IsDebuggerPresent` - ref: [MSDN](https://goo.gl/cg7Fkm)
 * `CheckRemoteDebuggerPresent` - ref: [MSDN](https://goo.gl/LrUdaG)
 * `SetUnhandledExceptionFilter` - ref: [The "Ultimate" Anti-Debugging Reference: D.xv](https://web.archive.org/web/20171212061916/http://pferrie.host22.com/papers/antidebug.pdf)
-* `RegOpenKeyExInternalW` - Registry checks
+* `RegOpenKeyExInternalW` - checks registry keys
+* `RegQueryValueExW` - checks registry key values
 
 That's all for now, you can add as much as you wish :) 
 
