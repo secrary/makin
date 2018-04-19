@@ -33,7 +33,7 @@ At this moment, `makin` can reveal following techniques:
 * `NtQueryInformationThread` - ref: [ntquery - NtQueryInformationThread](https://web.archive.org/web/20180110063515/https://ntquery.wordpress.com/2014/03/29/anti-debug-ntsetinformationthread/)
 * `NtCreateDebugObject` and `NtQueryObject` - ref: [Anti-Debug NtQueryObject](https://goo.gl/krE6JM)
 * `RtlAdjustPrivilege` - ref: [Using RtlAdjustPrivilege to detect debugger by insid3codeteam](https://goo.gl/m46tQe) 
-* `GetWriteWatch` - ref: [Anti-debug with VirtualAlloc’s write watch](https://web.archive.org/web/20180127193503/https://codeinsecurity.wordpress.com/2018/01/24/anti-debug-with-virtualallocs-write-watch/)
+* ~~~`GetWriteWatch` - ref: [Anti-debug with VirtualAlloc’s write watch](https://web.archive.org/web/20180127193503/https://codeinsecurity.wordpress.com/2018/01/24/anti-debug-with-virtualallocs-write-watch/)~~~
 
 `kernelbase.dll`:
 * `IsDebuggerPresent` - ref: [MSDN](https://goo.gl/cg7Fkm)
@@ -41,6 +41,8 @@ At this moment, `makin` can reveal following techniques:
 * `SetUnhandledExceptionFilter` - ref: [The "Ultimate" Anti-Debugging Reference: D.xv](https://web.archive.org/web/20171212061916/http://pferrie.host22.com/papers/antidebug.pdf)
 * `RegOpenKeyExInternalW` - checks registry keys
 * `RegQueryValueExW` - checks registry key values
+
+You can add more VM checks via editing `checks.json` file, without modification of the executable
 
 That's all for now, you can add as much as you wish :) 
 

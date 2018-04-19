@@ -1,0 +1,47 @@
+{
+  "title": "VM checks",
+
+  "Registry": {
+
+    "KeyChecks": {
+
+      "VMware": [
+        "SOFTWARE\\VMware, Inc.\\VMware Tools"
+      ],
+
+      "VirtualBox": [
+        "SOFTWARE\\Oracle\\VirtualBox Guest Additions",
+        "HARDWARE\\ACPI\\DSDT\\VBOX__",
+        "HARDWARE\\ACPI\\RSDT\\VBOX__",
+        "SYSTEM\\ControlSet001\\Services\\VBoxGuest",
+        "SYSTEM\\ControlSet001\\Services\\VBoxMouse",
+        "SYSTEM\\ControlSet001\\Services\\VBoxService",
+        "SYSTEM\\ControlSet001\\Services\\VBoxSF",
+        "SYSTEM\\ControlSet001\\Services\\VBoxVideo"
+      ],
+
+      "misc": [
+        "SOFTWARE\\Wine"
+      ]
+    },
+
+    "ValueChecks": [
+      "SystemManufacturer",
+      "SystemProductName",
+      "Identifier",
+      "SystemBiosVersion",
+      "SystemBiosDate",
+      "VideoBiosVersion",
+      "VideoBiosVersion"
+    ]
+
+  },
+
+  "FileSystem": {
+
+  },
+
+  "VirtualDevices": {
+
+  }
+}
