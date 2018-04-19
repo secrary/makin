@@ -7,10 +7,6 @@ I create `makin` to make initial malware assessment little bit easier for me, I 
 ### How does it work?
 `makin` opens a sample as a debuggee and injects `asho.dll`(main module renames all `dlls` before injection), `asho.dll` hooks several functions at `ntdll.dll` and `kernelbase.dll` libraries and after parameters checkings, it sends the corresponding message to the debugger (`makin.exe`).
 
-For hooking, it uses [Capstone engine](http://www.capstone-engine.org/), which makes hooking much stealthier.
-
-`Note`: You can use [vcpkg](https://github.com/Microsoft/vcpkg) to get `Capstone`.
-
 `makin` also generates a script for IDA Pro to set breakpoints at detected APIs.
 
 At this moment, `makin` can reveal following techniques: 
@@ -33,7 +29,7 @@ At this moment, `makin` can reveal following techniques:
 * `NtQueryInformationThread` - ref: [ntquery - NtQueryInformationThread](https://web.archive.org/web/20180110063515/https://ntquery.wordpress.com/2014/03/29/anti-debug-ntsetinformationthread/)
 * `NtCreateDebugObject` and `NtQueryObject` - ref: [Anti-Debug NtQueryObject](https://goo.gl/krE6JM)
 * `RtlAdjustPrivilege` - ref: [Using RtlAdjustPrivilege to detect debugger by insid3codeteam](https://goo.gl/m46tQe) 
-* ~~~`GetWriteWatch` - ref: [Anti-debug with VirtualAlloc’s write watch](https://web.archive.org/web/20180127193503/https://codeinsecurity.wordpress.com/2018/01/24/anti-debug-with-virtualallocs-write-watch/)~~~
+* ~~~`GetWriteWatch` - ref: [Anti-debug with VirtualAllocâ€™s write watch](https://web.archive.org/web/20180127193503/https://codeinsecurity.wordpress.com/2018/01/24/anti-debug-with-virtualallocs-write-watch/)~~~
 
 `kernelbase.dll`:
 * `IsDebuggerPresent` - ref: [MSDN](https://goo.gl/cg7Fkm)
@@ -45,6 +41,12 @@ At this moment, `makin` can reveal following techniques:
 You can add more VM checks via editing `checks.json` file, without modification of the executable
 
 That's all for now, you can add as much as you wish :) 
+
+Third-party library:
+* [Capstone engine](http://www.capstone-engine.org/)
+* [JSON for Modern C++](https://github.com/nlohmann/json)
+
+`Note`: You can use [vcpkg](https://github.com/Microsoft/vcpkg) for external dependencies.
 
 ### TODO: 
 * [DONE] ~~Use a disassembler such as [capstone](http://www.capstone-engine.org/) to hook little bit deeper and avoid simple hook checks.~~
