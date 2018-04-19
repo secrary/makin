@@ -42,7 +42,7 @@ You can add more VM checks via editing `checks.json` file, without modification 
 
 That's all for now, you can add as much as you wish :) 
 
-Third-party library:
+External dependencies:
 * [Capstone engine](http://www.capstone-engine.org/)
 * [JSON for Modern C++](https://github.com/nlohmann/json)
 
