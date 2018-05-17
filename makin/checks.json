@@ -6,22 +6,17 @@
     "KeyChecks": {
 
       "VMware": [
-        "SOFTWARE\\VMware, Inc.\\VMware Tools"
+        "vmware"
       ],
 
       "VirtualBox": [
-        "SOFTWARE\\Oracle\\VirtualBox Guest Additions",
-        "HARDWARE\\ACPI\\DSDT\\VBOX__",
-        "HARDWARE\\ACPI\\RSDT\\VBOX__",
-        "SYSTEM\\ControlSet001\\Services\\VBoxGuest",
-        "SYSTEM\\ControlSet001\\Services\\VBoxMouse",
-        "SYSTEM\\ControlSet001\\Services\\VBoxService",
-        "SYSTEM\\ControlSet001\\Services\\VBoxSF",
-        "SYSTEM\\ControlSet001\\Services\\VBoxVideo"
+        "virtualbox",
+        "vbox"
       ],
 
       "misc": [
-        "SOFTWARE\\Wine"
+        "wine",
+        "SOFTWARE\\Microsoft\\Virtual Machine\\Guest\\Parameters"
       ]
     },
 
@@ -38,10 +33,41 @@
   },
 
   "FileSystem": {
-
+    "Files": [
+      "virtualbox",
+      "vmware",
+      "vmbox",
+      "vmmouse.sys",
+      "vmhgfs.sys",
+      "vm3dmp.sys",
+      "vmci.sys",
+      "vmhgfs.sys",
+      "vmmemctl.sys",
+      "vmmouse.sys",
+      "vmrawdsk.sys",
+      "vmusbmouse.sys"
+    ]
   },
 
-  "VirtualDevices": {
+  "VirtualDevices": [
+    "PROCEXP152",
+    "hgfs",
+    "vmci"
+  ],
 
-  }
+  "Processes": [
+    "csrss.exe",
+    "vmbox",
+    "vmtoolsd.exe",
+    "vmwaretray.exe",
+    "vmwareuser.exe",
+    "VGAuthService.exe",
+    "vmacthlp.exe",
+    "vmsrvc.exe",
+    "vmusrvc.exe",
+    "prl_cc.exe",
+    "prl_tools.exe",
+    "xenservice.exe",
+    "qemu-ga.exe"
+  ]
 }
