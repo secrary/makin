@@ -31,7 +31,7 @@ At this moment, `makin` can reveal following techniques:
 * `RtlAdjustPrivilege` - ref: [Using RtlAdjustPrivilege to detect debugger by insid3codeteam](https://goo.gl/m46tQe) 
 * ~~~`GetWriteWatch` - ref: [Anti-debug with VirtualAlloc’s write watch](https://web.archive.org/web/20180127193503/https://codeinsecurity.wordpress.com/2018/01/24/anti-debug-with-virtualallocs-write-watch/)~~~
 * `PEB->BeingDebugged` - Instead of calling `IsDebuggerPresent()`, some programs manually check the `PEB` (Process Environment Block) for the [`BeingDebugged`](https://www.aldeid.com/wiki/PEB-Process-Environment-Block/BeingDebugged) flag.
-* `PEB->NtGlobalFlag` - ref: [al-khaser](https://github.com/LordNoteworthy/al-khaser/blob/bbf020b39b28bfb2561408c276fb91db528fa4ca/al-khaser/Anti%20Debug/ProcessHeap_NtGlobalFlag.cpp#L33:53)
+* `PEB->NtGlobalFlag` - ref: [al-khaser](https://github.com/LordNoteworthy/al-khaser/blob/bbf020b39b28bfb2561408c276fb91db528fa4ca/al-khaser/Anti%20Debug/ProcessHeap_NtGlobalFlag.cpp)
 
 `kernelbase.dll`:
 * `IsDebuggerPresent` - ref: [MSDN](https://goo.gl/cg7Fkm)
