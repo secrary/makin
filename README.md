@@ -32,6 +32,7 @@ At this moment, `makin` can reveal following techniques:
 * ~~~`GetWriteWatch` - ref: [Anti-debug with VirtualAlloc’s write watch](https://web.archive.org/web/20180127193503/https://codeinsecurity.wordpress.com/2018/01/24/anti-debug-with-virtualallocs-write-watch/)~~~
 * `PEB->BeingDebugged` - Instead of calling `IsDebuggerPresent()`, some programs manually check the `PEB` (Process Environment Block) for the [`BeingDebugged`](https://www.aldeid.com/wiki/PEB-Process-Environment-Block/BeingDebugged) flag.
 * `PEB->NtGlobalFlag` - ref: [al-khaser](https://github.com/LordNoteworthy/al-khaser/blob/bbf020b39b28bfb2561408c276fb91db528fa4ca/al-khaser/Anti%20Debug/ProcessHeap_NtGlobalFlag.cpp)
+* `UserSharedData->KdDebuggerEnabled` - ref: [al-khaser - SharedUserData_KernelDebugger](https://github.com/LordNoteworthy/al-khaser/blob/master/al-khaser/Anti%20Debug/SharedUserData_KernelDebugger.cpp)
 
 `kernelbase.dll`:
 * `IsDebuggerPresent` - ref: [MSDN](https://goo.gl/cg7Fkm)
