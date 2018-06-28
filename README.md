@@ -54,7 +54,7 @@ External dependencies:
 ### TODO: 
 * [DONE] ~~Use a disassembler such as [capstone](http://www.capstone-engine.org/) to hook little bit deeper and avoid simple hook checks.~~
 
-* ~~~At this moment, `makin` does not support child processes.~~~
+* [DONE] ~~~At this moment, `makin` does not support child processes.~~~
 
 * ~~~Add more tricks.~~~~ Add more tricks.
 
