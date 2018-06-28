@@ -56,13 +56,13 @@ External dependencies:
 
 * [DONE] ~~~At this moment, `makin` does not support child processes.~~~
 
-* ~~~Add more tricks.~~~~ Add more tricks.
+* [Partial] ~~~Add more tricks.~~~~ Add more tricks.
 
 * [DONE] ~~x86 support~~
 
 * [DONE] ~~~hook `kernelbase.dll`~~~
 
-* Add anti-vm, anti-emulation tricks detection [Partial]
+* [Partial] Add anti-vm, anti-emulation tricks detection
 
 * [DONE] ~~~Generate IDA Pro script to set BPs at detected APIs~~~
 
