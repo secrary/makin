@@ -62,7 +62,7 @@ External dependencies:
 
 * [DONE] ~~~hook `kernelbase.dll`~~~
 
-* [Partial] Add anti-vm, anti-emulation tricks detection
+* [Partial] ~~~Add anti-vm, anti-emulation tricks detection.~~~ Add more tricks.
 
 * [DONE] ~~~Generate IDA Pro script to set BPs at detected APIs~~~
 

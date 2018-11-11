@@ -23,7 +23,7 @@
     <ProjectGuid>{92E1A34F-910D-47EB-A037-3F74D7509EFB}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>makin</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">

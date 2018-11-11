@@ -23,7 +23,7 @@
     <ProjectGuid>{B9B4C3F7-6805-4D14-B0AB-1E18D868E0CC}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>asho</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
