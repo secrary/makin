@@ -31,6 +31,7 @@ At this moment, `makin` can reveal following techniques:
 * `PEB->BeingDebugged` - Instead of calling `IsDebuggerPresent()`, some programs manually check the `PEB` (Process Environment Block) for the [`BeingDebugged`](https://www.aldeid.com/wiki/PEB-Process-Environment-Block/BeingDebugged) flag.
 * `PEB->NtGlobalFlag` - ref: [al-khaser](https://github.com/LordNoteworthy/al-khaser/blob/bbf020b39b28bfb2561408c276fb91db528fa4ca/al-khaser/Anti%20Debug/ProcessHeap_NtGlobalFlag.cpp)
 * `UserSharedData->KdDebuggerEnabled` - ref: [al-khaser - SharedUserData_KernelDebugger](https://github.com/LordNoteworthy/al-khaser/blob/master/al-khaser/Anti%20Debug/SharedUserData_KernelDebugger.cpp)
+*  Close `PROCTECTED` handle trick - ref: [al-khaser - HANDLE_FLAG_PROTECT_FROM_CLOSE](https://github.com/LordNoteworthy/al-khaser/blob/master/al-khaser/AntiDebug/SetHandleInformation_API.cpp)
 
 `kernelbase.dll`:
 * `IsDebuggerPresent` - ref: [MSDN](https://goo.gl/cg7Fkm)

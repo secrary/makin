@@ -16,7 +16,7 @@ enum DrReg
 
 typedef NTSTATUS (WINAPI *pNtQueryInformationProcess)(HANDLE, PROCESSINFOCLASS, PVOID, ULONG, PULONG);
 
-std::vector<std::wstring> loadDll{};
+std::vector<std::string> loadDll{};
 
 std::vector<std::string> hookFunctions{};
 
@@ -29,31 +29,31 @@ inline void SetBits(DWORD_PTR& dw, const DWORD_PTR lowBit, const DWORD_PTR bits,
 
 VOID ProcessOutputString(const PROCESS_INFORMATION pi, const OUTPUT_DEBUG_STRING_INFO out_info)
 {
-	std::unique_ptr<TCHAR> pMsg{new TCHAR[out_info.nDebugStringLength * sizeof(TCHAR)]};
+	std::unique_ptr<CHAR> pMsg{new CHAR[out_info.nDebugStringLength * sizeof(CHAR)]};
 
 	ReadProcessMemory(pi.hProcess, out_info.lpDebugStringData, pMsg.get(), out_info.nDebugStringLength, nullptr);
 
-	const auto isUnicode = IsTextUnicode(pMsg.get(), out_info.nDebugStringLength, nullptr);
+	//const auto isUnicode = IsTextUnicode(pMsg.get(), out_info.nDebugStringLength, nullptr);
 
-	if (!isUnicode)
-		printf("[OutputDebugString] msg: %s\n\n", reinterpret_cast<char*>(pMsg.get())); // as ASCII
+	//if (!isUnicode)
+	//	printf("[OutputDebugString] msg: %s\n\n", reinterpret_cast<char*>(pMsg.get())); // as ASCII
 
 
-	auto cmdSubStr = wcsstr(pMsg.get(), L"DBG_NEW_PROC:");
+	auto cmdSubStr = strstr(pMsg.get(), "DBG_NEW_PROC:");
 	if (cmdSubStr)
 	{
 		cmdSubStr += 13;
-		wprintf_s(L"Monitor new process in a new console...\n\n");
+		printf_s("Monitor new process in a new console...\n\n");
 
-		TCHAR curExe[0x1000]{};
-		GetModuleFileName(nullptr, curExe, 0x1000);
+		CHAR curExe[0x1000]{};
+		GetModuleFileNameA(nullptr, curExe, 0x1000);
 
-		swprintf_s(curExe, L"%s %s", curExe, cmdSubStr);
+		sprintf_s(curExe, "%s %s", curExe, cmdSubStr);
 
-		STARTUPINFO nsi{sizeof(STARTUPINFO)};
+		STARTUPINFOA nsi{sizeof(STARTUPINFOA)};
 		PROCESS_INFORMATION npi{};
 
-		CreateProcess(nullptr, curExe, nullptr, nullptr, FALSE, CREATE_NEW_CONSOLE, nullptr, nullptr, &nsi, &npi);
+		CreateProcessA(nullptr, curExe, nullptr, nullptr, FALSE, CREATE_NEW_CONSOLE, nullptr, nullptr, &nsi, &npi);
 
 		CloseHandle(npi.hProcess);
 		CloseHandle(npi.hThread);
@@ -61,86 +61,87 @@ VOID ProcessOutputString(const PROCESS_INFORMATION pi, const OUTPUT_DEBUG_STRING
 		return;
 	}
 
-	if (isUnicode && pMsg.get()[0] != L'[')
+	if (pMsg.get()[0] != '[')
 	{
-		wprintf_s(L"[OutputDebugString] msg: %s\n\n", pMsg.get()); // raw message from the sample
+		printf_s("[OutputDebugString] msg: %s\n\n", pMsg.get()); // raw message from the sample
+		return;
 	}
-	else if (_tcslen(pMsg.get()) > 3 && (pMsg.get()[0] == L'[' && pMsg.get()[1] == L'_' && pMsg.get()[2] == L']'))
+	else if (strlen(pMsg.get()) > 3 && (pMsg.get()[0] == '[' && pMsg.get()[1] == '_' && pMsg.get()[2] == ']'))
 		// [_]
 	{
-		for (auto i = 0; i < loadDll.size(); ++i)
+		for (size_t i = 0; i < loadDll.size(); ++i)
 		{
-			TCHAR tmp[MAX_PATH + 2]{};
-			_tcscpy_s(tmp, MAX_PATH + 2, pMsg.get() + 3);
-			const std::wstring wtmp(tmp);
+			CHAR tmp[MAX_PATH + 2]{};
+			strcpy_s(tmp, MAX_PATH + 2, pMsg.get() + 3);
+			const std::string wtmp(tmp);
 			if (!wtmp.compare(loadDll[i])) // #SOURCE - The "Ultimate" Anti-Debugging Reference: 7.B.iv
 			{
 				hookFunctions.emplace_back("LdrLoadDll");
-				wprintf(
-					L"[LdrLoadDll] The debuggee attempts to use LdrLoadDll/NtCreateFile trick: %s\n\tref: The \"Ultimate\" Anti-Debugging Reference: 7.B.iv\n\n",
+				printf(
+					"[LdrLoadDll] The debuggee attempts to use LdrLoadDll/NtCreateFile trick: %s\n\tref: The \"Ultimate\" Anti-Debugging Reference: 7.B.iv\n\n",
 					wtmp.data());
 			}
 		}
+		return;
 	}
-	else if (isUnicode)
-	{
-		wprintf(L"%s\n", pMsg.get()); // from us, starts with [ symbol
 
-		// save functions for IDA script
-		std::wstring tmpStr(pMsg.get());
+	printf("%s\n", pMsg.get()); // from us, starts with [ symbol
 
-		// ntdll
-		if (tmpStr.find(L"NtClose") != std::string::npos)
-			hookFunctions.emplace_back("NtClose");
-		else if (tmpStr.find(L"NtOpenProcess") != std::string::npos)
-			hookFunctions.emplace_back("NtOpenProcess");
-		else if (tmpStr.find(L"NtCreateFile") != std::string::npos)
-			hookFunctions.emplace_back("NtCreateFile");
-		else if (tmpStr.find(L"NtSetDebugFilterState") != std::string::npos)
-			hookFunctions.emplace_back("NtSetDebugFilterState");
-		else if (tmpStr.find(L"NtQueryInformationProcess") != std::string::npos)
-			hookFunctions.emplace_back("NtQueryInformationProcess");
-		else if (tmpStr.find(L"NtQuerySystemInformation") != std::string::npos)
-			hookFunctions.emplace_back("NtQuerySystemInformation");
-		else if (tmpStr.find(L"NtSetInformationThread") != std::string::npos)
-			hookFunctions.emplace_back("NtSetInformationThread");
-		else if (tmpStr.find(L"NtCreateUserProcess") != std::string::npos)
-			hookFunctions.emplace_back("NtCreateUserProcess");
-		else if (tmpStr.find(L"NtCreateThreadEx") != std::string::npos)
-			hookFunctions.emplace_back("NtCreateThreadEx");
-		else if (tmpStr.find(L"NtSystemDebugControl") != std::string::npos)
-			hookFunctions.emplace_back("NtSystemDebugControl");
-		else if (tmpStr.find(L"NtYieldExecution") != std::string::npos)
-			hookFunctions.emplace_back("NtYieldExecution");
-		else if (tmpStr.find(L"NtSetLdtEntries") != std::string::npos)
-			hookFunctions.emplace_back("NtSetLdtEntries");
-		else if (tmpStr.find(L"NtQueryInformationThread") != std::string::npos)
-			hookFunctions.emplace_back("NtQueryInformationThread");
-		else if (tmpStr.find(L"NtCreateDebugObject") != std::string::npos)
-			hookFunctions.emplace_back("NtCreateDebugObject");
-		else if (tmpStr.find(L"NtQueryObject") != std::string::npos)
-			hookFunctions.emplace_back("NtQueryObject");
-		else if (tmpStr.find(L"RtlAdjustPrivilege") != std::string::npos)
-			hookFunctions.emplace_back("RtlAdjustPrivilege");
-		else if (tmpStr.find(L"NtShutdownSystem") != std::string::npos)
-			hookFunctions.emplace_back("NtShutdownSystem");
-		else if (tmpStr.find(L"ZwAllocateVirtualMemory") != std::string::npos)
-			hookFunctions.emplace_back("ZwAllocateVirtualMemory");
-		else if (tmpStr.find(L"ZwGetWriteWatch") != std::string::npos)
-			hookFunctions.emplace_back("ZwGetWriteWatch");
+	// save functions for IDA script
+	std::string tmpStr(pMsg.get());
 
-			// kernelbase
-		else if (tmpStr.find(L"IsDebuggerPresent") != std::string::npos)
-			hookFunctions.emplace_back("IsDebuggerPresent");
-		else if (tmpStr.find(L"CheckRemoteDebuggerPresent") != std::string::npos)
-			hookFunctions.emplace_back("CheckRemoteDebuggerPresent");
-		else if (tmpStr.find(L"SetUnhandledExceptionFilter") != std::string::npos)
-			hookFunctions.emplace_back("SetUnhandledExceptionFilter");
-		else if (tmpStr.find(L"RegOpenKeyExInternalW") != std::string::npos)
-			hookFunctions.emplace_back("RegOpenKeyExInternalW");
-		else if (tmpStr.find(L"RegQueryValueExW") != std::string::npos)
-			hookFunctions.emplace_back("RegQueryValueExW");
-	}
+	// ntdll
+	if (tmpStr.find("NtClose") != std::string::npos)
+		hookFunctions.emplace_back("NtClose");
+	else if (tmpStr.find("NtOpenProcess") != std::string::npos)
+		hookFunctions.emplace_back("NtOpenProcess");
+	else if (tmpStr.find("NtCreateFile") != std::string::npos)
+		hookFunctions.emplace_back("NtCreateFile");
+	else if (tmpStr.find("NtSetDebugFilterState") != std::string::npos)
+		hookFunctions.emplace_back("NtSetDebugFilterState");
+	else if (tmpStr.find("NtQueryInformationProcess") != std::string::npos)
+		hookFunctions.emplace_back("NtQueryInformationProcess");
+	else if (tmpStr.find("NtQuerySystemInformation") != std::string::npos)
+		hookFunctions.emplace_back("NtQuerySystemInformation");
+	else if (tmpStr.find("NtSetInformationThread") != std::string::npos)
+		hookFunctions.emplace_back("NtSetInformationThread");
+	else if (tmpStr.find("NtCreateUserProcess") != std::string::npos)
+		hookFunctions.emplace_back("NtCreateUserProcess");
+	else if (tmpStr.find("NtCreateThreadEx") != std::string::npos)
+		hookFunctions.emplace_back("NtCreateThreadEx");
+	else if (tmpStr.find("NtSystemDebugControl") != std::string::npos)
+		hookFunctions.emplace_back("NtSystemDebugControl");
+	else if (tmpStr.find("NtYieldExecution") != std::string::npos)
+		hookFunctions.emplace_back("NtYieldExecution");
+	else if (tmpStr.find("NtSetLdtEntries") != std::string::npos)
+		hookFunctions.emplace_back("NtSetLdtEntries");
+	else if (tmpStr.find("NtQueryInformationThread") != std::string::npos)
+		hookFunctions.emplace_back("NtQueryInformationThread");
+	else if (tmpStr.find("NtCreateDebugObject") != std::string::npos)
+		hookFunctions.emplace_back("NtCreateDebugObject");
+	else if (tmpStr.find("NtQueryObject") != std::string::npos)
+		hookFunctions.emplace_back("NtQueryObject");
+	else if (tmpStr.find("RtlAdjustPrivilege") != std::string::npos)
+		hookFunctions.emplace_back("RtlAdjustPrivilege");
+	else if (tmpStr.find("NtShutdownSystem") != std::string::npos)
+		hookFunctions.emplace_back("NtShutdownSystem");
+	else if (tmpStr.find("ZwAllocateVirtualMemory") != std::string::npos)
+		hookFunctions.emplace_back("ZwAllocateVirtualMemory");
+	else if (tmpStr.find("ZwGetWriteWatch") != std::string::npos)
+		hookFunctions.emplace_back("ZwGetWriteWatch");
+
+		// kernelbase
+	else if (tmpStr.find("IsDebuggerPresent") != std::string::npos)
+		hookFunctions.emplace_back("IsDebuggerPresent");
+	else if (tmpStr.find("CheckRemoteDebuggerPresent") != std::string::npos)
+		hookFunctions.emplace_back("CheckRemoteDebuggerPresent");
+	else if (tmpStr.find("SetUnhandledExceptionFilter") != std::string::npos)
+		hookFunctions.emplace_back("SetUnhandledExceptionFilter");
+	else if (tmpStr.find("RegOpenKeyExInternalW") != std::string::npos)
+		hookFunctions.emplace_back("RegOpenKeyExInternalW");
+	else if (tmpStr.find("RegQueryValueExW") != std::string::npos)
+		hookFunctions.emplace_back("RegQueryValueExW");
+
 }
 
 VOID GenRandStr(TCHAR* str, const size_t size) // just enough randomness
@@ -203,7 +204,7 @@ int _tmain()
 	TCHAR dll_path[MAX_PATH + 2]{};
 	TCHAR proc_path[MAX_PATH + 2]{};
 	auto first_its_me = FALSE;
-	TCHAR filePath[MAX_PATH + 2]{};
+	CHAR filePath[MAX_PATH + 2]{};
 	CONTEXT cxt{};
 	//PVOID ex_addr = nullptr;
 	HANDLE tHandle{};
@@ -477,7 +478,7 @@ int _tmain()
 	while (!done)
 	{
 		auto contStatus = DBG_CONTINUE;
-		if (WaitForDebugEventEx(&d_event, INFINITE))
+		if (WaitForDebugEvent(&d_event, INFINITE))
 		{
 			switch (d_event.dwDebugEventCode)
 			{
@@ -488,10 +489,10 @@ int _tmain()
 				break;
 			case LOAD_DLL_DEBUG_EVENT:
 				// we get load dll as file handle 
-				GetFinalPathNameByHandle(d_event.u.LoadDll.hFile, filePath, MAX_PATH + 2, 0);
+				GetFinalPathNameByHandleA(d_event.u.LoadDll.hFile, filePath, MAX_PATH + 2, 0);
 				if (filePath)
 				{
-					const std::wstring tmpStr(filePath + 4);
+					const std::string tmpStr(filePath + 4);
 					loadDll.emplace_back(tmpStr);
 				}
 				// to avoid LdrloadDll / NtCreateFile trick ;)
@@ -506,7 +507,8 @@ int _tmain()
 				{
 				case EXCEPTION_ACCESS_VIOLATION:
 					printf("[EXCEPTION] EXCEPTION_ACCESS_VIOLATION\n\n");
-					// cont_status = DBG_EXCEPTION_HANDLED;
+					system("pause");
+					//cont_status = DBG_EXCEPTION_HANDLED;
 					break;
 
 				case EXCEPTION_BREAKPOINT:
@@ -584,7 +586,7 @@ int _tmain()
 			case EXIT_PROCESS_DEBUG_EVENT:
 				done = TRUE;
 				printf("[EOF] ========================================================================\n");
-				getchar();
+				system("pause");
 				break;
 
 			default:
