@@ -1,10 +1,11 @@
 #pragma once
 
-#define STATUS_SUCCESS                   0x00000000L  
+#define STATUS_SUCCESS                   0x00000000L
 #define STATUS_ACCESS_DENIED             0xC0000022L
 #define STATUS_NO_YIELD_PERFORMED        0x40000024L
 
-typedef enum _PROCESSINFOCLASS {
+typedef enum _PROCESSINFOCLASS
+{
 	ProcessBasicInformation = 0,
 	ProcessQuotaLimits = 1,
 	ProcessIoCounters = 2,
@@ -56,10 +57,11 @@ typedef enum _PROCESSINFOCLASS {
 	ProcessTokenVirtualizationEnabled = 48,
 	ProcessConsoleHostProcess = 49,
 	ProcessWindowInformation = 50,
-	MaxProcessInfoClass    // always last one so no need to add a value manually
+	MaxProcessInfoClass // always last one so no need to add a value manually
 } PROCESSINFOCLASS;
 
-typedef enum _THREADINFOCLASS {
+typedef enum _THREADINFOCLASS
+{
 	ThreadBasicInformation = 0,
 	ThreadTimes = 1,
 	ThreadPriority = 2,
@@ -75,7 +77,8 @@ typedef enum _THREADINFOCLASS {
 	ThreadAmILastThread = 12,
 	ThreadIdealProcessor = 13,
 	ThreadPriorityBoost = 14,
-	ThreadSetTlsArrayAddress = 15,   // Obsolete
+	ThreadSetTlsArrayAddress = 15,
+	// Obsolete
 	ThreadIsIoPending = 16,
 	ThreadHideFromDebugger = 17,
 	ThreadBreakOnTermination = 18,
@@ -87,11 +90,13 @@ typedef enum _THREADINFOCLASS {
 	ThreadPagePriority = 24,
 	ThreadActualBasePriority = 25,
 	ThreadTebInformation = 26,
-	ThreadCSwitchMon = 27,   // Obsolete
+	ThreadCSwitchMon = 27,
+	// Obsolete
 	ThreadCSwitchPmu = 28,
 	ThreadWow64Context = 29,
 	ThreadGroupInformation = 30,
-	ThreadUmsInformation = 31,   // UMS
+	ThreadUmsInformation = 31,
+	// UMS
 	ThreadCounterProfiling = 32,
 	ThreadIdealProcessorEx = 33,
 	ThreadCpuAccountingInformation = 34,
@@ -110,42 +115,49 @@ typedef struct _SYSTEM_KERNEL_DEBUGGER_INFORMATION
 } SYSTEM_KERNEL_DEBUGGER_INFORMATION, *PSYSTEM_KERNEL_DEBUGGER_INFORMATION;
 
 
-typedef struct _LSA_UNICODE_STRING {
+typedef struct _LSA_UNICODE_STRING
+{
 	USHORT Length;
 	USHORT MaximumLength;
-	PWSTR  Buffer;
+	PWSTR Buffer;
 } LSA_UNICODE_STRING, *PLSA_UNICODE_STRING, UNICODE_STRING, *PUNICODE_STRING;
 
-typedef struct _RTL_USER_PROCESS_PARAMETERS {
-	BYTE           Reserved1[16];
-	PVOID          Reserved2[10];
+typedef struct _RTL_USER_PROCESS_PARAMETERS
+{
+	BYTE Reserved1[16];
+	PVOID Reserved2[10];
 	UNICODE_STRING ImagePathName;
 	UNICODE_STRING CommandLine;
 } RTL_USER_PROCESS_PARAMETERS, *PRTL_USER_PROCESS_PARAMETERS;
 
-typedef struct _CLIENT_ID {
+typedef struct _CLIENT_ID
+{
 	HANDLE UniqueProcess;
 	HANDLE UniqueThread;
 } CLIENT_ID;
-typedef CLIENT_ID *PCLIENT_ID;
+
+typedef CLIENT_ID* PCLIENT_ID;
 
 //typedef void xNtRaiseException(
 //	IN PEXCEPTION_RECORD    ExceptionRecord,
 //	IN PCONTEXT             ThreadContext,
 //	IN BOOLEAN              HandleException);
 
-typedef struct _OBJECT_ATTRIBUTES {
+typedef struct _OBJECT_ATTRIBUTES
+{
 	ULONG Length;
 	HANDLE RootDirectory;
 	PUNICODE_STRING ObjectName;
 	ULONG Attributes;
-	PVOID SecurityDescriptor;        // Points to type SECURITY_DESCRIPTOR
-	PVOID SecurityQualityOfService;  // Points to type SECURITY_QUALITY_OF_SERVICE
+	PVOID SecurityDescriptor; // Points to type SECURITY_DESCRIPTOR
+	PVOID SecurityQualityOfService; // Points to type SECURITY_QUALITY_OF_SERVICE
 } OBJECT_ATTRIBUTES;
-typedef OBJECT_ATTRIBUTES *POBJECT_ATTRIBUTES;
+
+typedef OBJECT_ATTRIBUTES* POBJECT_ATTRIBUTES;
 
 
-typedef struct _PEB {
+typedef struct _PEB
+{
 	BYTE Reserved1[2];
 	BYTE BeingDebugged;
 	BYTE Reserved2[1];
@@ -168,7 +180,8 @@ typedef struct _PEB {
 } PEB, *PPEB;
 
 
-typedef enum _DEBUG_CONTROL_CODE {
+typedef enum _DEBUG_CONTROL_CODE
+{
 	DebugSysGetTraceInformation = 1,
 	DebugSysSetInternalBreakpoint,
 	DebugSysSetSpecialCall,
@@ -193,25 +206,31 @@ typedef enum _DEBUG_CONTROL_CODE {
 
 typedef enum _OBJECT_INFORMATION_CLASS
 {
-	ObjectBasicInformation, // OBJECT_BASIC_INFORMATION
-	ObjectNameInformation, // OBJECT_NAME_INFORMATION
-	ObjectTypeInformation, // OBJECT_TYPE_INFORMATION
-	ObjectTypesInformation, // OBJECT_TYPES_INFORMATION
-	ObjectHandleFlagInformation, // OBJECT_HANDLE_FLAG_INFORMATION
+	ObjectBasicInformation,
+	// OBJECT_BASIC_INFORMATION
+	ObjectNameInformation,
+	// OBJECT_NAME_INFORMATION
+	ObjectTypeInformation,
+	// OBJECT_TYPE_INFORMATION
+	ObjectTypesInformation,
+	// OBJECT_TYPES_INFORMATION
+	ObjectHandleFlagInformation,
+	// OBJECT_HANDLE_FLAG_INFORMATION
 	ObjectSessionInformation,
 	ObjectSessionObjectInformation,
 	MaxObjectInfoClass
 } OBJECT_INFORMATION_CLASS;
 
-typedef struct _OBJECT_TYPE_INFORMATION {
+typedef struct _OBJECT_TYPE_INFORMATION
+{
 	UNICODE_STRING TypeName;
 	ULONG TotalNumberOfHandles;
 	ULONG TotalNumberOfObjects;
-}OBJECT_TYPE_INFORMATION, *POBJECT_TYPE_INFORMATION;
+} OBJECT_TYPE_INFORMATION, *POBJECT_TYPE_INFORMATION;
 
-typedef enum _SHUTDOWN_ACTION {
+typedef enum _SHUTDOWN_ACTION
+{
 	ShutdownNoReboot,
 	ShutdownReboot,
 	ShutdownPowerOff
 } SHUTDOWN_ACTION, *PSHUTDOWN_ACTION;
-

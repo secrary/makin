@@ -2,8 +2,6 @@ I create `makin` to make initial malware assessment little bit easier for me, I 
 
 ##### Any feedback is greatly appreciated: [@_qaz_qaz](https://twitter.com/_qaz_qaz)
 
-#### Note: ~~Only supports x64~~ Supports x64 and x86. Works on Windows 10.
-
 ### How does it work?
 `makin` opens a sample as a debuggee and injects `asho.dll`(main module renames all `dlls` before injection), `asho.dll` hooks several functions at `ntdll.dll` and `kernelbase.dll` libraries and after parameters checkings, it sends the corresponding message to the debugger (`makin.exe`).
 
@@ -45,26 +43,9 @@ You can add more VM checks via editing `checks.json` file, without modification 
 
 That's all for now, you can add as much as you wish :) 
 
-External dependencies:
-* [Capstone engine](http://www.capstone-engine.org/)
-* [JSON for Modern C++](https://github.com/nlohmann/json)
-
-`Note`: You can use [vcpkg](https://github.com/Microsoft/vcpkg) for external dependencies.
-
-### TODO: 
-* [DONE] ~~Use a disassembler such as [capstone](http://www.capstone-engine.org/) to hook little bit deeper and avoid simple hook checks.~~
-
-* [DONE] ~~~At this moment, `makin` does not support child processes.~~~
-
-* [Partial] ~~~Add more tricks.~~~~ Add more tricks.
-
-* [DONE] ~~x86 support~~
-
-* [DONE] ~~~hook `kernelbase.dll`~~~
-
-* [Partial] ~~~Add anti-vm, anti-emulation tricks detection.~~~ Add more tricks.
-
-* [DONE] ~~~Generate IDA Pro script to set BPs at detected APIs~~~
+## Third-party
+- Zydis ([MIT License](https://github.com/zyantific/zydis/blob/master/LICENSE))
+- JSON for Modern C++ ([MIT License](https://github.com/nlohmann/json/blob/develop/LICENSE.MIT))
 
 ##### DEMO:
 
