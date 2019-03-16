@@ -66,20 +66,20 @@ VOID ProcessOutputString(const PROCESS_INFORMATION pi, const OUTPUT_DEBUG_STRING
 		printf_s("[OutputDebugString] msg: %s\n\n", pMsg.get()); // raw message from the sample
 		return;
 	}
-	else if (strlen(pMsg.get()) > 3 && (pMsg.get()[0] == '[' && pMsg.get()[1] == '_' && pMsg.get()[2] == ']'))
+	if (strlen(pMsg.get()) > 3 && (pMsg.get()[0] == '[' && pMsg.get()[1] == '_' && pMsg.get()[2] == ']'))
 		// [_]
 	{
-		for (size_t i = 0; i < loadDll.size(); ++i)
+		for (const auto& i : loadDll)
 		{
 			CHAR tmp[MAX_PATH + 2]{};
 			strcpy_s(tmp, MAX_PATH + 2, pMsg.get() + 3);
-			const std::string wtmp(tmp);
-			if (!wtmp.compare(loadDll[i])) // #SOURCE - The "Ultimate" Anti-Debugging Reference: 7.B.iv
+			const std::string tmpStr(tmp);
+			if (!tmpStr.compare(i)) // #SOURCE - The "Ultimate" Anti-Debugging Reference: 7.B.iv
 			{
 				hookFunctions.emplace_back("LdrLoadDll");
 				printf(
 					"[LdrLoadDll] The debuggee attempts to use LdrLoadDll/NtCreateFile trick: %s\n\tref: The \"Ultimate\" Anti-Debugging Reference: 7.B.iv\n\n",
-					wtmp.data());
+					tmpStr.data());
 			}
 		}
 		return;
@@ -190,10 +190,10 @@ void SetHardwareBreakpoint(HANDLE tHandle, CONTEXT& cxt, const DWORD_PTR addr, s
 int _tmain()
 {
 	// welcome 
-	const TCHAR welcome[] = L"makin --- Copyright (c) 2018 Lasha Khasaia\n"
+	const TCHAR welcome[] = L"makin --- Copyright (c) 2019 Lasha Khasaia\n"
 		L"https://www.secrary.com - @_qaz_qaz\n"
 		L"----------------------------------------------------\n\n";
-	wprintf(L"%s", welcome);
+	wprintf(L"%s\n", welcome);
 
 	STARTUPINFO si{};
 	si.cb = sizeof(si);
@@ -241,7 +241,7 @@ int _tmain()
 	if (hFile == INVALID_HANDLE_VALUE)
 	{
 		err = GetLastError();
-		printf("CreateFile error: %ul\n", err);
+		printf("CreateFile error: %lu\n", err);
 		return err;
 	}
 
@@ -261,7 +261,7 @@ int _tmain()
 	if (!hMapFile)
 	{
 		err = GetLastError();
-		printf("CreateFileMapping is NULL: %ul", err);
+		printf("CreateFileMapping is NULL: %lu", err);
 		return err;
 	}
 
@@ -275,7 +275,7 @@ int _tmain()
 	if (!lpMapAddress)
 	{
 		err = GetLastError();
-		printf("MapViewOfFIle is NULL: %ul\n", err);
+		printf("MapViewOfFIle is NULL: %lu\n", err);
 		return err;
 	}
 	// IMAGE_DOS_HEADER->e_lfanew
@@ -294,7 +294,7 @@ int _tmain()
 	if (!lpMapAddress)
 	{
 		err = GetLastError();
-		printf("MapViewOfFIle is NULL: %ul\n", err);
+		printf("MapViewOfFIle is NULL: %lu\n", err);
 		return err;
 	}
 
@@ -424,7 +424,7 @@ int _tmain()
 	if (!cStatus)
 	{
 		err = GetLastError();
-		wprintf(L"[!] CopyFile failed: %ul\n", err);
+		wprintf(L"[!] CopyFile failed: %lu\n", err);
 
 		return err;
 	}
@@ -489,8 +489,7 @@ int _tmain()
 				break;
 			case LOAD_DLL_DEBUG_EVENT:
 				// we get load dll as file handle 
-				GetFinalPathNameByHandleA(d_event.u.LoadDll.hFile, filePath, MAX_PATH + 2, 0);
-				if (filePath)
+				if (GetFinalPathNameByHandleA(d_event.u.LoadDll.hFile, filePath, MAX_PATH + 2, 0))
 				{
 					const std::string tmpStr(filePath + 4);
 					loadDll.emplace_back(tmpStr);
@@ -644,7 +643,7 @@ int _tmain()
 	//if (hFileIda == INVALID_HANDLE_VALUE)
 	//{
 	//   err = GetLastError();
-	//   wprintf(L"CreateFile failed: %ul", err);
+	//   wprintf(L"CreateFile failed: %lu", err);
 	//}
 
 	//WriteFile(hFileIda, header, strlen(header), nullptr, nullptr);

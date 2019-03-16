@@ -24,6 +24,7 @@
 #include <memory>
 #include <ctime>
 #include <Strsafe.h>
+#include <intrin.h>
 
 #include <zydis/Zydis.h>
 #include <nlohmann/json.hpp>
