@@ -141,7 +141,6 @@ VOID ProcessOutputString(const PROCESS_INFORMATION pi, const OUTPUT_DEBUG_STRING
 		hookFunctions.emplace_back("RegOpenKeyExInternalW");
 	else if (tmpStr.find("RegQueryValueExW") != std::string::npos)
 		hookFunctions.emplace_back("RegQueryValueExW");
-
 }
 
 VOID GenRandStr(TCHAR* str, const size_t size) // just enough randomness
@@ -267,10 +266,10 @@ int _tmain()
 
 	// Map just one page
 	auto lpMapAddress = MapViewOfFile(hMapFile,
-	                               FILE_MAP_READ,
-	                               0,
-	                               0,
-	                               sysInfo.dwPageSize); // one page size is more than we need for now
+	                                  FILE_MAP_READ,
+	                                  0,
+	                                  0,
+	                                  sysInfo.dwPageSize); // one page size is more than we need for now
 
 	if (!lpMapAddress)
 	{
@@ -279,17 +278,18 @@ int _tmain()
 		return err;
 	}
 	// IMAGE_DOS_HEADER->e_lfanew
-	const auto e_lfanew = *reinterpret_cast<DWORD*>(static_cast<byte*>(lpMapAddress) + sizeof(IMAGE_DOS_HEADER) - sizeof(
-		DWORD));
+	const auto e_lfanew = *reinterpret_cast<DWORD*>(static_cast<byte*>(lpMapAddress) + sizeof(IMAGE_DOS_HEADER) - sizeof
+		(
+			DWORD));
 	UnmapViewOfFile(lpMapAddress);
 
 
 	const auto ntMapAddrLow = (e_lfanew / sysInfo.dwAllocationGranularity) * sysInfo.dwAllocationGranularity;
 	lpMapAddress = MapViewOfFile(hMapFile,
-	                          FILE_MAP_READ,
-	                          0,
-	                          ntMapAddrLow,
-	                          sysInfo.dwPageSize);
+	                             FILE_MAP_READ,
+	                             0,
+	                             ntMapAddrLow,
+	                             sysInfo.dwPageSize);
 
 	if (!lpMapAddress)
 	{
@@ -342,7 +342,7 @@ int _tmain()
 	const auto pBeingDebugged = DWORD_PTR(reinterpret_cast<byte*>(peb) + 0x2); // PEB->BeingDebugged
 
 #ifndef _WIN64
-   peb -= 0x1000; // 32-bit PEB
+	peb -= 0x1000; // 32-bit PEB
 #endif
 
 	const auto pImageBaseAddress = DWORD_PTR(reinterpret_cast<byte*>(peb) + 0x10);
@@ -360,8 +360,8 @@ int _tmain()
 #ifdef _WIN64
 	pNtGlobalFlag = DWORD_PTR(reinterpret_cast<byte*>(peb) + 0xBC);
 #else
-   pNtGlobalFlag = DWORD_PTR(reinterpret_cast<byte*>(peb) + 0x68);
-   pNtGlobalFlag += 0x1000; // 32-bit PEB
+	pNtGlobalFlag = DWORD_PTR(reinterpret_cast<byte*>(peb) + 0x68);
+	pNtGlobalFlag += 0x1000; // 32-bit PEB
 #endif
 
 	SetHardwareBreakpoint(pi.hThread, cxt, pNtGlobalFlag, 2, Dr1);

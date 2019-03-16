@@ -2,9 +2,7 @@
   "title": "VM checks",
 
   "Registry": {
-
     "KeyChecks": {
-
       "VMware": [
         "vmware"
       ],
