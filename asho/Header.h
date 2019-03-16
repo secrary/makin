@@ -136,7 +136,7 @@ typedef struct _CLIENT_ID
 	HANDLE UniqueThread;
 } CLIENT_ID;
 
-typedef CLIENT_ID* PCLIENT_ID;
+using PCLIENT_ID = CLIENT_ID *;
 
 //typedef void xNtRaiseException(
 //	IN PEXCEPTION_RECORD    ExceptionRecord,
@@ -153,7 +153,7 @@ typedef struct _OBJECT_ATTRIBUTES
 	PVOID SecurityQualityOfService; // Points to type SECURITY_QUALITY_OF_SERVICE
 } OBJECT_ATTRIBUTES;
 
-typedef OBJECT_ATTRIBUTES* POBJECT_ATTRIBUTES;
+using POBJECT_ATTRIBUTES = OBJECT_ATTRIBUTES *;
 
 
 typedef struct _PEB

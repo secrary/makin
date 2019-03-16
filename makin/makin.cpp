@@ -5,6 +5,7 @@
 //
 
 #include "stdafx.h"
+#include <Psapi.h>
 
 enum DrReg
 {
@@ -14,7 +15,7 @@ enum DrReg
 	Dr3
 };
 
-typedef NTSTATUS (WINAPI *pNtQueryInformationProcess)(HANDLE, PROCESSINFOCLASS, PVOID, ULONG, PULONG);
+typedef NTSTATUS(WINAPI *pNtQueryInformationProcess)(HANDLE, PROCESSINFOCLASS, PVOID, ULONG, PULONG);
 
 std::vector<std::string> loadDll{};
 
@@ -40,7 +41,7 @@ VOID ProcessOutputString(const PROCESS_INFORMATION pi, const OUTPUT_DEBUG_STRING
 
 
 	auto cmdSubStr = strstr(pMsg.get(), "DBG_NEW_PROC:");
-	if (cmdSubStr)
+	if (cmdSubStr != nullptr)
 	{
 		cmdSubStr += 13;
 		printf_s("Monitor new process in a new console...\n\n");
@@ -74,7 +75,7 @@ VOID ProcessOutputString(const PROCESS_INFORMATION pi, const OUTPUT_DEBUG_STRING
 			CHAR tmp[MAX_PATH + 2]{};
 			strcpy_s(tmp, MAX_PATH + 2, pMsg.get() + 3);
 			const std::string tmpStr(tmp);
-			if (!tmpStr.compare(i)) // #SOURCE - The "Ultimate" Anti-Debugging Reference: 7.B.iv
+			if (tmpStr == i) // #SOURCE - The "Ultimate" Anti-Debugging Reference: 7.B.iv
 			{
 				hookFunctions.emplace_back("LdrLoadDll");
 				printf(
@@ -91,56 +92,57 @@ VOID ProcessOutputString(const PROCESS_INFORMATION pi, const OUTPUT_DEBUG_STRING
 	std::string tmpStr(pMsg.get());
 
 	// ntdll
-	if (tmpStr.find("NtClose") != std::string::npos)
+	if (tmpStr.find("NtClose") != std::string::npos) {
 		hookFunctions.emplace_back("NtClose");
-	else if (tmpStr.find("NtOpenProcess") != std::string::npos)
+	} else if (tmpStr.find("NtOpenProcess") != std::string::npos) {
 		hookFunctions.emplace_back("NtOpenProcess");
-	else if (tmpStr.find("NtCreateFile") != std::string::npos)
+	} else if (tmpStr.find("NtCreateFile") != std::string::npos) {
 		hookFunctions.emplace_back("NtCreateFile");
-	else if (tmpStr.find("NtSetDebugFilterState") != std::string::npos)
+	} else if (tmpStr.find("NtSetDebugFilterState") != std::string::npos) {
 		hookFunctions.emplace_back("NtSetDebugFilterState");
-	else if (tmpStr.find("NtQueryInformationProcess") != std::string::npos)
+	} else if (tmpStr.find("NtQueryInformationProcess") != std::string::npos) {
 		hookFunctions.emplace_back("NtQueryInformationProcess");
-	else if (tmpStr.find("NtQuerySystemInformation") != std::string::npos)
+	} else if (tmpStr.find("NtQuerySystemInformation") != std::string::npos) {
 		hookFunctions.emplace_back("NtQuerySystemInformation");
-	else if (tmpStr.find("NtSetInformationThread") != std::string::npos)
+	} else if (tmpStr.find("NtSetInformationThread") != std::string::npos) {
 		hookFunctions.emplace_back("NtSetInformationThread");
-	else if (tmpStr.find("NtCreateUserProcess") != std::string::npos)
+	} else if (tmpStr.find("NtCreateUserProcess") != std::string::npos) {
 		hookFunctions.emplace_back("NtCreateUserProcess");
-	else if (tmpStr.find("NtCreateThreadEx") != std::string::npos)
+	} else if (tmpStr.find("NtCreateThreadEx") != std::string::npos) {
 		hookFunctions.emplace_back("NtCreateThreadEx");
-	else if (tmpStr.find("NtSystemDebugControl") != std::string::npos)
+	} else if (tmpStr.find("NtSystemDebugControl") != std::string::npos) {
 		hookFunctions.emplace_back("NtSystemDebugControl");
-	else if (tmpStr.find("NtYieldExecution") != std::string::npos)
+	} else if (tmpStr.find("NtYieldExecution") != std::string::npos) {
 		hookFunctions.emplace_back("NtYieldExecution");
-	else if (tmpStr.find("NtSetLdtEntries") != std::string::npos)
+	} else if (tmpStr.find("NtSetLdtEntries") != std::string::npos) {
 		hookFunctions.emplace_back("NtSetLdtEntries");
-	else if (tmpStr.find("NtQueryInformationThread") != std::string::npos)
+	} else if (tmpStr.find("NtQueryInformationThread") != std::string::npos) {
 		hookFunctions.emplace_back("NtQueryInformationThread");
-	else if (tmpStr.find("NtCreateDebugObject") != std::string::npos)
+	} else if (tmpStr.find("NtCreateDebugObject") != std::string::npos) {
 		hookFunctions.emplace_back("NtCreateDebugObject");
-	else if (tmpStr.find("NtQueryObject") != std::string::npos)
+	} else if (tmpStr.find("NtQueryObject") != std::string::npos) {
 		hookFunctions.emplace_back("NtQueryObject");
-	else if (tmpStr.find("RtlAdjustPrivilege") != std::string::npos)
+	} else if (tmpStr.find("RtlAdjustPrivilege") != std::string::npos) {
 		hookFunctions.emplace_back("RtlAdjustPrivilege");
-	else if (tmpStr.find("NtShutdownSystem") != std::string::npos)
+	} else if (tmpStr.find("NtShutdownSystem") != std::string::npos) {
 		hookFunctions.emplace_back("NtShutdownSystem");
-	else if (tmpStr.find("ZwAllocateVirtualMemory") != std::string::npos)
+	} else if (tmpStr.find("ZwAllocateVirtualMemory") != std::string::npos) {
 		hookFunctions.emplace_back("ZwAllocateVirtualMemory");
-	else if (tmpStr.find("ZwGetWriteWatch") != std::string::npos)
+	} else if (tmpStr.find("ZwGetWriteWatch") != std::string::npos) {
 		hookFunctions.emplace_back("ZwGetWriteWatch");
 
 		// kernelbase
-	else if (tmpStr.find("IsDebuggerPresent") != std::string::npos)
+	} else if (tmpStr.find("IsDebuggerPresent") != std::string::npos) {
 		hookFunctions.emplace_back("IsDebuggerPresent");
-	else if (tmpStr.find("CheckRemoteDebuggerPresent") != std::string::npos)
+	} else if (tmpStr.find("CheckRemoteDebuggerPresent") != std::string::npos) {
 		hookFunctions.emplace_back("CheckRemoteDebuggerPresent");
-	else if (tmpStr.find("SetUnhandledExceptionFilter") != std::string::npos)
+	} else if (tmpStr.find("SetUnhandledExceptionFilter") != std::string::npos) {
 		hookFunctions.emplace_back("SetUnhandledExceptionFilter");
-	else if (tmpStr.find("RegOpenKeyExInternalW") != std::string::npos)
+	} else if (tmpStr.find("RegOpenKeyExInternalW") != std::string::npos) {
 		hookFunctions.emplace_back("RegOpenKeyExInternalW");
-	else if (tmpStr.find("RegQueryValueExW") != std::string::npos)
+	} else if (tmpStr.find("RegQueryValueExW") != std::string::npos) {
 		hookFunctions.emplace_back("RegQueryValueExW");
+}
 }
 
 VOID GenRandStr(TCHAR* str, const size_t size) // just enough randomness
@@ -257,7 +259,7 @@ int _tmain()
 	                                        size.LowPart,
 	                                        nullptr);
 
-	if (!hMapFile)
+	if (hMapFile == nullptr)
 	{
 		err = GetLastError();
 		printf("CreateFileMapping is NULL: %lu", err);
@@ -271,7 +273,7 @@ int _tmain()
 	                                  0,
 	                                  sysInfo.dwPageSize); // one page size is more than we need for now
 
-	if (!lpMapAddress)
+	if (lpMapAddress == nullptr)
 	{
 		err = GetLastError();
 		printf("MapViewOfFIle is NULL: %lu\n", err);
@@ -291,7 +293,7 @@ int _tmain()
 	                             ntMapAddrLow,
 	                             sysInfo.dwPageSize);
 
-	if (!lpMapAddress)
+	if (lpMapAddress == nullptr)
 	{
 		err = GetLastError();
 		printf("MapViewOfFIle is NULL: %lu\n", err);
@@ -304,13 +306,14 @@ int _tmain()
 		ntHeaderAddr = static_cast<byte*>(ntHeaderAddr) + e_lfanew;
 	}
 
-	if (PIMAGE_NT_HEADERS(ntHeaderAddr)->OptionalHeader.DataDirectory[9].VirtualAddress)
+	if (PIMAGE_NT_HEADERS(ntHeaderAddr)->OptionalHeader.DataDirectory[9].VirtualAddress != 0u)
 	{
 		printf(
 			"[TLS] The executable contains TLS callback(s)\nI can not hook code executed by TLS callbacks\nPlease, abort execution and check it manually\n[c]ontinue / [A]bort: \n\n");
 		const char ic = getchar();
-		if (ic != 'c')
+		if (ic != 'c') {
 			ExitProcess(0);
+		}
 	}
 
 	const DWORD_PTR sizeOfImage = PIMAGE_NT_HEADERS(ntHeaderAddr)->OptionalHeader.SizeOfImage;
@@ -320,7 +323,6 @@ int _tmain()
 
 	wprintf(L"PROCESS NAME: %s\nCOMMAND LINE: %s\n\n", proc_path, cmdLine);
 
-	// !!! copy capstone.dll to curr dir
 	if (!CreateProcess(proc_path, cmdLine, nullptr, nullptr, FALSE,
 	                   DEBUG_ONLY_THIS_PROCESS | CREATE_SUSPENDED | DETACHED_PROCESS, nullptr, nullptr, &si, &pi))
 	{
@@ -350,8 +352,9 @@ int _tmain()
 
 	DWORD_PTR imageBaseAddress{};
 	SIZE_T ret{};
-	if (pImageBaseAddress)
+	if (pImageBaseAddress != 0u) {
 		ReadProcessMemory(pi.hProcess, PVOID(pImageBaseAddress), &imageBaseAddress, sizeof(DWORD_PTR), &ret);
+	}
 
 	SetHardwareBreakpoint(pi.hThread, cxt, pBeingDebugged, 1, Dr0);
 
@@ -421,7 +424,7 @@ int _tmain()
 	_tcscat_s(ashoTmpDir, randAsho);
 	_tcscat_s(ashoTmpDir, L".dll");
 	const auto cStatus = CopyFile(dll_path, ashoTmpDir, FALSE);
-	if (!cStatus)
+	if (cStatus == 0)
 	{
 		err = GetLastError();
 		wprintf(L"[!] CopyFile failed: %lu\n", err);
@@ -437,20 +440,20 @@ int _tmain()
 	}
 
 	const auto p_alloc = VirtualAllocEx(pi.hProcess, nullptr, MAX_PATH + 2, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
-	if (!p_alloc)
+	if (p_alloc == nullptr)
 	{
 		err = GetLastError();
 		printf("[!] Allocation failed: %lu\n", err);
 		return err;
 	}
-	if (!WriteProcessMemory(pi.hProcess, p_alloc, ashoTmpDir, MAX_PATH + 2, nullptr))
+	if (WriteProcessMemory(pi.hProcess, p_alloc, ashoTmpDir, MAX_PATH + 2, nullptr) == 0)
 	{
 		err = GetLastError();
 		printf("WriteProcessMemory failed: %lu\n", err);
 		return err;
 	}
 	const auto h_module = GetModuleHandle(L"kernel32");
-	if (!h_module)
+	if (h_module == nullptr)
 	{
 		err = GetLastError();
 		printf("GetmModuleHandle failed: %lu\n", err);
@@ -458,7 +461,7 @@ int _tmain()
 	}
 	const auto loadLibraryAddress = GetProcAddress(h_module, "LoadLibraryW");
 
-	if (!loadLibraryAddress)
+	if (loadLibraryAddress == nullptr)
 	{
 		err = GetLastError();
 		printf("GetProcAddress failed: %lu\n", err);
@@ -466,7 +469,7 @@ int _tmain()
 	}
 
 	const auto qStatus = QueueUserAPC(PAPCFUNC(loadLibraryAddress), pi.hThread, ULONG_PTR(p_alloc));
-	if (!qStatus)
+	if (qStatus == 0u)
 	{
 		err = GetLastError();
 		printf("QueueUserAPC failed: %lu\n", err);
@@ -475,10 +478,10 @@ int _tmain()
 
 	ResumeThread(pi.hThread);
 
-	while (!done)
+	while (done == 0)
 	{
 		auto contStatus = DBG_CONTINUE;
-		if (WaitForDebugEvent(&d_event, INFINITE))
+		if (WaitForDebugEvent(&d_event, INFINITE) != 0)
 		{
 			switch (d_event.dwDebugEventCode)
 			{
@@ -489,7 +492,7 @@ int _tmain()
 				break;
 			case LOAD_DLL_DEBUG_EVENT:
 				// we get load dll as file handle 
-				if (GetFinalPathNameByHandleA(d_event.u.LoadDll.hFile, filePath, MAX_PATH + 2, 0))
+				if (GetFinalPathNameByHandleA(d_event.u.LoadDll.hFile, filePath, MAX_PATH + 2, 0) != 0u)
 				{
 					const std::string tmpStr(filePath + 4);
 					loadDll.emplace_back(tmpStr);
@@ -500,8 +503,9 @@ int _tmain()
 
 			case EXCEPTION_DEBUG_EVENT:
 				contStatus = DBG_EXCEPTION_NOT_HANDLED;
-				if (!d_event.u.Exception.dwFirstChance)
+				if (d_event.u.Exception.dwFirstChance == 0u) {
 					break;
+}
 				switch (d_event.u.Exception.ExceptionRecord.ExceptionCode)
 				{
 				case EXCEPTION_ACCESS_VIOLATION:
@@ -512,7 +516,7 @@ int _tmain()
 
 				case EXCEPTION_BREAKPOINT:
 
-					if (!first_its_me)
+					if (first_its_me == 0)
 					{
 						first_its_me = TRUE;
 						break;
@@ -534,33 +538,36 @@ int _tmain()
 					// HANDLE hardware accesses
 
 					tHandle = OpenThread(GENERIC_ALL, FALSE, d_event.dwThreadId);
-					if (!tHandle)
+					if (tHandle == nullptr) {
 						break;
+}
 					cxt.ContextFlags = CONTEXT_DEBUG_REGISTERS;
 					GetThreadContext(tHandle, &cxt);
 					CloseHandle(tHandle);
 
-					if (cxt.Dr6 & 0b1111) //  There are HBs
+					if ((cxt.Dr6 & 0b1111) != 0u) { //  There are HBs
 						contStatus = DBG_EXCEPTION_HANDLED;
-					else
+					} else {
 						printf("[EXCEPTION] EXCEPTION_SINGLE_STEP\n");
+}
 
 					if (expAddress > imageBaseAddress && expAddress < imageBaseAddress + sizeOfImage)
 					{
-						if (cxt.Dr6 & 0x1)
+						if ((cxt.Dr6 & 0x1) != 0u) {
 							printf(
 								"[PEB->BeingDebugged] The debuggee attempts to detect a debugger.\nBase address of the image: 0x%p\nException address: 0x%p\nRVA: 0x%p\n\n",
 								PVOID(imageBaseAddress), PVOID(expAddress), PVOID(expAddress - imageBaseAddress));
-						else if (cxt.Dr6 & 0b10)
+						} else if ((cxt.Dr6 & 0b10) != 0u) {
 							printf(
 								"[PEB->NtGlobalFlag] The debuggee attempts to detect a debugger.\nBase address of the image: 0x%p\nException address: 0x%p\nRVA: 0x%p\n\n",
 								PVOID(imageBaseAddress), PVOID(expAddress), PVOID(expAddress - imageBaseAddress));
-						else if (cxt.Dr6 & 0b100)
+						} else if ((cxt.Dr6 & 0b100) != 0u) {
 							printf(
 								"[UserSharedData->KdDebuggerEnabled] The debuggee attempts to detect a debugger.\nBase address of the image: 0x%p\nException address: 0x%p\nRVA: 0x%p\n\n",
 								PVOID(imageBaseAddress), PVOID(expAddress), PVOID(expAddress - imageBaseAddress));
-						else if (cxt.Dr6 & 0b1000)
+						} else if ((cxt.Dr6 & 0b1000) != 0u) {
 							printf("DR3\n"); // Not implemented yet
+}
 
 						break;
 					}
