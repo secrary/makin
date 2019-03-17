@@ -55,7 +55,7 @@ LONG WINAPI HookNtClose(_In_ HANDLE handle)
 
 
 LONG WINAPI HookNtOpenProcess(_Out_ PHANDLE ProcessHandle, _In_ ACCESS_MASK DesiredAccess, _In_ LPVOID ObjectAttributes,
-	_In_opt_ PCLIENT_ID ClientId)
+                              _In_opt_ PCLIENT_ID ClientId)
 {
 	typedef LONG WINAPI xZwOpenProcess(
 		_Out_ PHANDLE xProcessHandle,
@@ -75,7 +75,7 @@ LONG WINAPI HookNtOpenProcess(_Out_ PHANDLE ProcessHandle, _In_ ACCESS_MASK Desi
 	if (hSnapshot == INVALID_HANDLE_VALUE)
 		return xOP(ProcessHandle, DesiredAccess, ObjectAttributes, ClientId);
 
-	PROCESSENTRY32 pe = { sizeof(pe) };
+	PROCESSENTRY32 pe = {sizeof(pe)};
 	if (Process32First(hSnapshot, &pe))
 	{
 		do
@@ -85,7 +85,8 @@ LONG WINAPI HookNtOpenProcess(_Out_ PHANDLE ProcessHandle, _In_ ACCESS_MASK Desi
 				_tcscpy_s(processName, 0x100, pe.szExeFile);
 				break;
 			}
-		} while (Process32Next(hSnapshot, &pe));
+		}
+		while (Process32Next(hSnapshot, &pe));
 	}
 	CloseHandle(hSnapshot);
 
@@ -101,8 +102,8 @@ LONG WINAPI HookNtOpenProcess(_Out_ PHANDLE ProcessHandle, _In_ ACCESS_MASK Desi
 		{
 			auto outStr = new TCHAR[0x100]{};
 			wsprintf(outStr,
-				L"[NtOpenProcess] [Suspicious behavior] The debuggee attempts to open the following process: %s\n\tref: https://github.com/LordNoteworthy/al-khaser \n",
-				processName);
+			         L"[NtOpenProcess] [Suspicious behavior] The debuggee attempts to open the following process: %s\n\tref: https://github.com/LordNoteworthy/al-khaser \n",
+			         processName);
 			OutputDebugString(outStr);
 
 			delete[] outStr;
@@ -173,8 +174,8 @@ LONG WINAPI HookNtCreateFile(
 		{
 			auto outStr = new TCHAR[0x100]{};
 			wsprintf(outStr,
-				L"[NtCreateFile] The debuggee attempts to open the following suspicious file/directory or I/O device: %s\n\tref: https://github.com/LordNoteworthy/al-khaser \n",
-				devName);
+			         L"[NtCreateFile] The debuggee attempts to open the following suspicious file/directory or I/O device: %s\n\tref: https://github.com/LordNoteworthy/al-khaser \n",
+			         devName);
 			OutputDebugString(outStr);
 
 			delete[] outStr;
@@ -193,7 +194,7 @@ LONG WINAPI HookNtCreateFile(
 	delete[] devName;
 	const auto oCf = reinterpret_cast<xZwCreateFile*>(GetProcAddress(ntdllCopyModule, "NtCreateFile"));
 	return oCf(FileHandle, DesiredAccess, ObjectAttributes, IoStatusBlock, AllocationSize, FileAttributes, ShareAccess,
-		CreateDisposition, CreateOptions, EaBuffer, EaLength);
+	           CreateDisposition, CreateOptions, EaBuffer, EaLength);
 }
 
 ULONG WINAPI HookNtSetDebugFilterState(ULONG ComponentId, ULONG Level, BOOLEAN State)
@@ -229,11 +230,11 @@ LONG WINAPI HookNtQueryInformationProcess(
 	);
 
 	const auto oNQi = reinterpret_cast<NtQueryInformationProcess*>(GetProcAddress(
-		ntdllCopyModule, "NtQueryInformationProcess")
-		);
+			ntdllCopyModule, "NtQueryInformationProcess")
+	);
 
 	const auto status = oNQi(ProcessHandle, ProcessInformationClass, ProcessInformation, ProcessInformationLength,
-		ReturnLength);
+	                         ReturnLength);
 	if (ProcessInformationClass == ProcessDebugPort)
 	{
 		OutputDebugString(
@@ -316,18 +317,18 @@ LONG WINAPI HookNtSetInformationThread(
 }
 
 LONG WINAPI HookNtCreateUserProcess(PHANDLE ProcessHandle, PHANDLE ThreadHandle, ACCESS_MASK ProcessDesiredAccess,
-	ACCESS_MASK ThreadDesiredAccess, POBJECT_ATTRIBUTES ProcessObjectAttributes,
-	POBJECT_ATTRIBUTES ThreadObjectAttributes, ULONG ulProcessFlags,
-	ULONG ulThreadFlags, PRTL_USER_PROCESS_PARAMETERS RtlUserProcessParameters,
-	LPVOID PsCreateInfo, LPVOID PsAttributeList)
+                                    ACCESS_MASK ThreadDesiredAccess, POBJECT_ATTRIBUTES ProcessObjectAttributes,
+                                    POBJECT_ATTRIBUTES ThreadObjectAttributes, ULONG ulProcessFlags,
+                                    ULONG ulThreadFlags, PRTL_USER_PROCESS_PARAMETERS RtlUserProcessParameters,
+                                    LPVOID PsCreateInfo, LPVOID PsAttributeList)
 {
 	typedef LONG WINAPI xNtCreateUserProcess(PHANDLE xProcessHandle, PHANDLE xThreadHandle,
-		ACCESS_MASK xProcessDesiredAccess, ACCESS_MASK xThreadDesiredAccess,
-		POBJECT_ATTRIBUTES xProcessObjectAttributes,
-		POBJECT_ATTRIBUTES xThreadObjectAttributes, ULONG xulProcessFlags,
-		ULONG xulThreadFlags,
-		PRTL_USER_PROCESS_PARAMETERS xRtlUserProcessParameters,
-		LPVOID xPsCreateInfo, LPVOID xPsAttributeList);
+	                                         ACCESS_MASK xProcessDesiredAccess, ACCESS_MASK xThreadDesiredAccess,
+	                                         POBJECT_ATTRIBUTES xProcessObjectAttributes,
+	                                         POBJECT_ATTRIBUTES xThreadObjectAttributes, ULONG xulProcessFlags,
+	                                         ULONG xulThreadFlags,
+	                                         PRTL_USER_PROCESS_PARAMETERS xRtlUserProcessParameters,
+	                                         LPVOID xPsCreateInfo, LPVOID xPsAttributeList);
 
 	//const auto createUserProc = reinterpret_cast<xNtCreateUserProcess*>(GetProcAddress(NtdllCopyModule, "NtCreateUserProcess"));
 
@@ -400,7 +401,7 @@ LONG WINAPI HookNtCreateThreadEx(
 	}
 
 	return exThread(ThreadHandle, DesiredAccess, ObjectAttributes, ProcessHandle, StartRoutine, Argument, CreateFlags,
-		ZeroBits, StackSize, MaximumStackSize, AttributeList);
+	                ZeroBits, StackSize, MaximumStackSize, AttributeList);
 }
 
 LONG WINAPI HookNtSystemDebugControl(
@@ -422,8 +423,9 @@ LONG WINAPI HookNtSystemDebugControl(
 			OUT PULONG xReturnLength
 		);
 
-	const auto ntSysDbgCtrl = reinterpret_cast<xNtSystemDebugControl*>(GetProcAddress(ntdllCopyModule, "NtSystemDebugControl")
-		);
+	const auto ntSysDbgCtrl = reinterpret_cast<xNtSystemDebugControl*>(GetProcAddress(
+			ntdllCopyModule, "NtSystemDebugControl")
+	);
 
 	if (Command != 0x1d)
 	{
@@ -500,7 +502,7 @@ BOOL WINAPI HookIsDebuggerPresent()
 {
 	bool isDbg = FALSE;
 	const auto returnAddress = reinterpret_cast<DWORD_PTR>(_ReturnAddress());
-	if (returnAddress < reinterpret_cast<DWORD_PTR>(currentModuleInfo.lpBaseOfDll) || returnAddress >(reinterpret_cast<
+	if (returnAddress < reinterpret_cast<DWORD_PTR>(currentModuleInfo.lpBaseOfDll) || returnAddress > (reinterpret_cast<
 		DWORD_PTR>(currentModuleInfo.lpBaseOfDll) + currentModuleInfo.SizeOfImage))
 	{
 		return isDbg;
@@ -546,7 +548,8 @@ ULONG WINAPI HookNtCreateDebugObject(
 		IN ACCESS_MASK xDesiredAccess,
 		IN POBJECT_ATTRIBUTES xObjectAttributes,
 		IN ULONG xFlags);
-	const auto createDbgObj = reinterpret_cast<xNtCreateDebugObject*>(GetProcAddress(ntdllCopyModule, "NtCreateDebugObject"));
+	const auto createDbgObj = reinterpret_cast<xNtCreateDebugObject*>(GetProcAddress(
+		ntdllCopyModule, "NtCreateDebugObject"));
 
 	ntCreateDbgObjectCalled = TRUE;
 
@@ -574,7 +577,7 @@ ULONG WINAPI HookNtQueryObject(
 
 	const auto queryObject = reinterpret_cast<xNtQueryObject*>(GetProcAddress(ntdllCopyModule, "NtQueryObject"));
 	const auto Status = queryObject(Handle, ObjectInformationClass, ObjectInformation, ObjectInformationLength,
-		ReturnLength);
+	                                ReturnLength);
 
 	if (ntCreateDbgObjectCalled && ObjectInformationClass == ObjectTypeInformation)
 	{
@@ -603,7 +606,8 @@ ULONG WINAPI HookRtlAdjustPrivilege(
 		_In_ BOOLEAN xClient,
 		_Out_ PBOOLEAN xWasEnabled
 	);
-	const auto adjustDbg = reinterpret_cast<xRtlAdjustPrivilege*>(GetProcAddress(ntdllCopyModule, "RtlAdjustPrivilege"));
+	const auto adjustDbg = reinterpret_cast<xRtlAdjustPrivilege*>(GetProcAddress(ntdllCopyModule, "RtlAdjustPrivilege")
+	);
 
 	const auto Status = adjustDbg(Privilege, Enable, Client, WasEnabled);
 
@@ -701,7 +705,7 @@ ULONG WINAPI HookZwGetWriteWatch(
 			L"[WriteWatch] The debugee attempts to detect a debugger [GetWriteWatch]\n\tref: https://goo.gl/jVoMjH \n");
 
 	return getWatch(ProcessHandle, Flags, BaseAddress, RegionSize, UserAddressArray, EntriesInUserAddressArray,
-		Granularity);
+	                Granularity);
 }
 
 LONG WINAPI HookRegOpenKeyExInternalW( // not stable !!!!
@@ -765,8 +769,8 @@ LONG WINAPI HookRegOpenKeyExInternalW( // not stable !!!!
 			if (normalPath && StrStrI(normalPath, wstrKey.c_str()))
 			{
 				StringCchPrintf(outStr, OUT_STR_SIZE,
-					L"[RegOpenKeyExInternalW] The debugee checks against VM (Vmware, VirtualBox, etc) related registry keys: %s\\%s\n\tref: https://github.com/LordNoteworthy/al-khaser \n",
-					keyHandle, normalPath);
+				                L"[RegOpenKeyExInternalW] The debugee checks against VM (Vmware, VirtualBox, etc) related registry keys: %s\\%s\n\tref: https://github.com/LordNoteworthy/al-khaser \n",
+				                keyHandle, normalPath);
 
 				OutputDebugString(outStr);
 
@@ -800,8 +804,9 @@ LONG WINAPI HookRegQueryValueExW(
 		_Out_opt_ LPBYTE xlpData,
 		_Inout_opt_ LPDWORD xlpcbData
 	);
-	const auto regQueryValueExW = reinterpret_cast<xRegQueryValueEx*>(GetProcAddress(kernelBaseCopyModule, "RegQueryValueExW")
-		);
+	const auto regQueryValueExW = reinterpret_cast<xRegQueryValueEx*>(GetProcAddress(
+			kernelBaseCopyModule, "RegQueryValueExW")
+	);
 
 	const auto retQueryValue = regQueryValueExW(hKey, lpValueName, lpReserved, lpType, lpData, lpcbData);
 
@@ -818,8 +823,8 @@ LONG WINAPI HookRegQueryValueExW(
 		if (lpValueName && StrStrI(lpValueName, wstrKey.c_str()))
 		{
 			StringCchPrintf(outStr, OUT_STR_SIZE,
-				L"[RegQueryValueExW] The debugee checks following suspicious registry key value - %s:%s\n\tref: https://github.com/LordNoteworthy/al-khaser \n",
-				lpValueName, lpData);
+			                L"[RegQueryValueExW] The debugee checks following suspicious registry key value - %s:%s\n\tref: https://github.com/LordNoteworthy/al-khaser \n",
+			                lpValueName, lpData);
 			OutputDebugString(outStr);
 
 			RtlSecureZeroMemory(outStr, OUT_STR_SIZE);
@@ -841,8 +846,9 @@ BOOL WINAPI HookGetThreadContext(
 		_Inout_ LPCONTEXT xlpContext
 	);
 
-	const auto NtGetThreadContext = reinterpret_cast<xGetThreadContext*>(GetProcAddress(ntdllCopyModule, "ZwGetContextThread")
-		);
+	const auto NtGetThreadContext = reinterpret_cast<xGetThreadContext*>(GetProcAddress(
+			ntdllCopyModule, "ZwGetContextThread")
+	);
 
 	const auto ret = NtGetThreadContext(hThread, lpContext);
 

@@ -15,7 +15,7 @@ enum DrReg
 	Dr3
 };
 
-typedef NTSTATUS(WINAPI *pNtQueryInformationProcess)(HANDLE, PROCESSINFOCLASS, PVOID, ULONG, PULONG);
+typedef NTSTATUS (WINAPI *pNtQueryInformationProcess)(HANDLE, PROCESSINFOCLASS, PVOID, ULONG, PULONG);
 
 std::vector<std::string> loadDll{};
 
@@ -30,7 +30,7 @@ inline void SetBits(DWORD_PTR& dw, const DWORD_PTR lowBit, const DWORD_PTR bits,
 
 VOID ProcessOutputString(const PROCESS_INFORMATION pi, const OUTPUT_DEBUG_STRING_INFO out_info)
 {
-	std::unique_ptr<CHAR[]> pMsg {new CHAR[out_info.nDebugStringLength * sizeof(CHAR)]};
+	std::unique_ptr<CHAR[]> pMsg{new CHAR[out_info.nDebugStringLength * sizeof(CHAR)]};
 
 	ReadProcessMemory(pi.hProcess, out_info.lpDebugStringData, pMsg.get(), out_info.nDebugStringLength, nullptr);
 
@@ -92,57 +92,104 @@ VOID ProcessOutputString(const PROCESS_INFORMATION pi, const OUTPUT_DEBUG_STRING
 	std::string tmpStr(pMsg.get());
 
 	// ntdll
-	if (tmpStr.find("NtClose") != std::string::npos) {
+	if (tmpStr.find("NtClose") != std::string::npos)
+	{
 		hookFunctions.emplace_back("NtClose");
-	} else if (tmpStr.find("NtOpenProcess") != std::string::npos) {
+	}
+	else if (tmpStr.find("NtOpenProcess") != std::string::npos)
+	{
 		hookFunctions.emplace_back("NtOpenProcess");
-	} else if (tmpStr.find("NtCreateFile") != std::string::npos) {
+	}
+	else if (tmpStr.find("NtCreateFile") != std::string::npos)
+	{
 		hookFunctions.emplace_back("NtCreateFile");
-	} else if (tmpStr.find("NtSetDebugFilterState") != std::string::npos) {
+	}
+	else if (tmpStr.find("NtSetDebugFilterState") != std::string::npos)
+	{
 		hookFunctions.emplace_back("NtSetDebugFilterState");
-	} else if (tmpStr.find("NtQueryInformationProcess") != std::string::npos) {
+	}
+	else if (tmpStr.find("NtQueryInformationProcess") != std::string::npos)
+	{
 		hookFunctions.emplace_back("NtQueryInformationProcess");
-	} else if (tmpStr.find("NtQuerySystemInformation") != std::string::npos) {
+	}
+	else if (tmpStr.find("NtQuerySystemInformation") != std::string::npos)
+	{
 		hookFunctions.emplace_back("NtQuerySystemInformation");
-	} else if (tmpStr.find("NtSetInformationThread") != std::string::npos) {
+	}
+	else if (tmpStr.find("NtSetInformationThread") != std::string::npos)
+	{
 		hookFunctions.emplace_back("NtSetInformationThread");
-	} else if (tmpStr.find("NtCreateUserProcess") != std::string::npos) {
+	}
+	else if (tmpStr.find("NtCreateUserProcess") != std::string::npos)
+	{
 		hookFunctions.emplace_back("NtCreateUserProcess");
-	} else if (tmpStr.find("NtCreateThreadEx") != std::string::npos) {
+	}
+	else if (tmpStr.find("NtCreateThreadEx") != std::string::npos)
+	{
 		hookFunctions.emplace_back("NtCreateThreadEx");
-	} else if (tmpStr.find("NtSystemDebugControl") != std::string::npos) {
+	}
+	else if (tmpStr.find("NtSystemDebugControl") != std::string::npos)
+	{
 		hookFunctions.emplace_back("NtSystemDebugControl");
-	} else if (tmpStr.find("NtYieldExecution") != std::string::npos) {
+	}
+	else if (tmpStr.find("NtYieldExecution") != std::string::npos)
+	{
 		hookFunctions.emplace_back("NtYieldExecution");
-	} else if (tmpStr.find("NtSetLdtEntries") != std::string::npos) {
+	}
+	else if (tmpStr.find("NtSetLdtEntries") != std::string::npos)
+	{
 		hookFunctions.emplace_back("NtSetLdtEntries");
-	} else if (tmpStr.find("NtQueryInformationThread") != std::string::npos) {
+	}
+	else if (tmpStr.find("NtQueryInformationThread") != std::string::npos)
+	{
 		hookFunctions.emplace_back("NtQueryInformationThread");
-	} else if (tmpStr.find("NtCreateDebugObject") != std::string::npos) {
+	}
+	else if (tmpStr.find("NtCreateDebugObject") != std::string::npos)
+	{
 		hookFunctions.emplace_back("NtCreateDebugObject");
-	} else if (tmpStr.find("NtQueryObject") != std::string::npos) {
+	}
+	else if (tmpStr.find("NtQueryObject") != std::string::npos)
+	{
 		hookFunctions.emplace_back("NtQueryObject");
-	} else if (tmpStr.find("RtlAdjustPrivilege") != std::string::npos) {
+	}
+	else if (tmpStr.find("RtlAdjustPrivilege") != std::string::npos)
+	{
 		hookFunctions.emplace_back("RtlAdjustPrivilege");
-	} else if (tmpStr.find("NtShutdownSystem") != std::string::npos) {
+	}
+	else if (tmpStr.find("NtShutdownSystem") != std::string::npos)
+	{
 		hookFunctions.emplace_back("NtShutdownSystem");
-	} else if (tmpStr.find("ZwAllocateVirtualMemory") != std::string::npos) {
+	}
+	else if (tmpStr.find("ZwAllocateVirtualMemory") != std::string::npos)
+	{
 		hookFunctions.emplace_back("ZwAllocateVirtualMemory");
-	} else if (tmpStr.find("ZwGetWriteWatch") != std::string::npos) {
+	}
+	else if (tmpStr.find("ZwGetWriteWatch") != std::string::npos)
+	{
 		hookFunctions.emplace_back("ZwGetWriteWatch");
 
 		// kernelbase
-	} else if (tmpStr.find("IsDebuggerPresent") != std::string::npos) {
+	}
+	else if (tmpStr.find("IsDebuggerPresent") != std::string::npos)
+	{
 		hookFunctions.emplace_back("IsDebuggerPresent");
-	} else if (tmpStr.find("CheckRemoteDebuggerPresent") != std::string::npos) {
+	}
+	else if (tmpStr.find("CheckRemoteDebuggerPresent") != std::string::npos)
+	{
 		hookFunctions.emplace_back("CheckRemoteDebuggerPresent");
-	} else if (tmpStr.find("SetUnhandledExceptionFilter") != std::string::npos) {
+	}
+	else if (tmpStr.find("SetUnhandledExceptionFilter") != std::string::npos)
+	{
 		hookFunctions.emplace_back("SetUnhandledExceptionFilter");
-	} else if (tmpStr.find("RegOpenKeyExInternalW") != std::string::npos) {
+	}
+	else if (tmpStr.find("RegOpenKeyExInternalW") != std::string::npos)
+	{
 		hookFunctions.emplace_back("RegOpenKeyExInternalW");
-	} else if (tmpStr.find("RegQueryValueExW") != std::string::npos) {
+	}
+	else if (tmpStr.find("RegQueryValueExW") != std::string::npos)
+	{
 		hookFunctions.emplace_back("RegQueryValueExW");
-}
+	}
 }
 
 std::wstring GenRandStr(const size_t size) // just enough randomness
@@ -286,7 +333,7 @@ int _tmain()
 		(
 			DWORD));
 	UnmapViewOfFile(lpMapAddress);
-	
+
 
 	const auto ntMapAddrLow = (e_lfanew / sysInfo.dwAllocationGranularity) * sysInfo.dwAllocationGranularity;
 	lpMapAddress = MapViewOfFile(hMapFile,
@@ -313,7 +360,8 @@ int _tmain()
 		printf(
 			"[TLS] The executable contains TLS callback(s)\nI can not hook code executed by TLS callbacks\nPlease, abort execution and check it manually\n[c]ontinue / [A]bort: \n\n");
 		const auto ic = getchar();
-		if (ic != 'c') {
+		if (ic != 'c')
+		{
 			ExitProcess(0);
 		}
 	}
@@ -355,7 +403,8 @@ int _tmain()
 
 	DWORD_PTR imageBaseAddress{};
 	SIZE_T ret{};
-	if (pImageBaseAddress != 0u) {
+	if (pImageBaseAddress != 0u)
+	{
 		ReadProcessMemory(pi.hProcess, PVOID(pImageBaseAddress), &imageBaseAddress, sizeof(DWORD_PTR), &ret);
 	}
 
@@ -422,7 +471,7 @@ int _tmain()
 	// generate random name for asho.dll ;)
 	TCHAR ashoTmpDir[MAX_PATH + 2]{};
 	GetTempPath(MAX_PATH + 2, ashoTmpDir);
-	auto ashoPath = std::wstring{ ashoTmpDir } + GenRandStr(6) + L".dll";
+	auto ashoPath = std::wstring{ashoTmpDir} + GenRandStr(6) + L".dll";
 	const auto cStatus = CopyFile(dll_path, ashoPath.c_str(), FALSE);
 	if (cStatus == 0)
 	{
@@ -503,9 +552,10 @@ int _tmain()
 
 			case EXCEPTION_DEBUG_EVENT:
 				contStatus = DBG_EXCEPTION_NOT_HANDLED;
-				if (d_event.u.Exception.dwFirstChance == 0u) {
+				if (d_event.u.Exception.dwFirstChance == 0u)
+				{
 					break;
-}
+				}
 				switch (d_event.u.Exception.ExceptionRecord.ExceptionCode)
 				{
 				case EXCEPTION_ACCESS_VIOLATION:
@@ -538,36 +588,48 @@ int _tmain()
 					// HANDLE hardware accesses
 
 					tHandle = OpenThread(GENERIC_ALL, FALSE, d_event.dwThreadId);
-					if (tHandle == nullptr) {
+					if (tHandle == nullptr)
+					{
 						break;
-}
+					}
 					cxt.ContextFlags = CONTEXT_DEBUG_REGISTERS;
 					GetThreadContext(tHandle, &cxt);
 					CloseHandle(tHandle);
 
-					if ((cxt.Dr6 & 0b1111) != 0u) { //  There are HBs
+					if ((cxt.Dr6 & 0b1111) != 0u)
+					{
+						//  There are HBs
 						contStatus = DBG_EXCEPTION_HANDLED;
-					} else {
+					}
+					else
+					{
 						printf("[EXCEPTION] EXCEPTION_SINGLE_STEP\n");
-}
+					}
 
 					if (expAddress > imageBaseAddress && expAddress < imageBaseAddress + sizeOfImage)
 					{
-						if ((cxt.Dr6 & 0x1) != 0u) {
+						if ((cxt.Dr6 & 0x1) != 0u)
+						{
 							printf(
 								"[PEB->BeingDebugged] The debuggee attempts to detect a debugger.\nBase address of the image: 0x%p\nException address: 0x%p\nRVA: 0x%p\n\n",
 								PVOID(imageBaseAddress), PVOID(expAddress), PVOID(expAddress - imageBaseAddress));
-						} else if ((cxt.Dr6 & 0b10) != 0u) {
+						}
+						else if ((cxt.Dr6 & 0b10) != 0u)
+						{
 							printf(
 								"[PEB->NtGlobalFlag] The debuggee attempts to detect a debugger.\nBase address of the image: 0x%p\nException address: 0x%p\nRVA: 0x%p\n\n",
 								PVOID(imageBaseAddress), PVOID(expAddress), PVOID(expAddress - imageBaseAddress));
-						} else if ((cxt.Dr6 & 0b100) != 0u) {
+						}
+						else if ((cxt.Dr6 & 0b100) != 0u)
+						{
 							printf(
 								"[UserSharedData->KdDebuggerEnabled] The debuggee attempts to detect a debugger.\nBase address of the image: 0x%p\nException address: 0x%p\nRVA: 0x%p\n\n",
 								PVOID(imageBaseAddress), PVOID(expAddress), PVOID(expAddress - imageBaseAddress));
-						} else if ((cxt.Dr6 & 0b1000) != 0u) {
+						}
+						else if ((cxt.Dr6 & 0b1000) != 0u)
+						{
 							printf("DR3\n"); // Not implemented yet
-}
+						}
 
 						break;
 					}

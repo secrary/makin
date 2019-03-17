@@ -12,14 +12,15 @@ class Hook
 	HMODULE KernelBaseModule{};
 	ZydisDecoder decoder;
 
-	void HookFunction(const std::string targetFunction, const DWORD_PTR hookFunc, const std::string libModule) const;
+	void HookFunction(std::string targetFunction, DWORD_PTR hookFunc, std::string libModule) const;
 
 public:
 	Hook();
 	bool HookFuncs() const;
 };
 
-inline void Hook::HookFunction(const std::string targetFunction, const DWORD_PTR hookFunc, const std::string libModule) const
+inline void Hook::HookFunction(const std::string targetFunction, const DWORD_PTR hookFunc,
+                               const std::string libModule) const
 {
 	HMODULE lib;
 	if (libModule == "ntdll")
@@ -38,7 +39,7 @@ inline void Hook::HookFunction(const std::string targetFunction, const DWORD_PTR
 
 	const ZyanUSize length = 0x10; // MAX INSTR size
 	ZydisDecodedInstruction instruction;
-	if (!ZYAN_SUCCESS(ZydisDecoderDecodeBuffer(&decoder, targetFuncAddress, length,
+	if (!		ZYAN_SUCCESS(ZydisDecoderDecodeBuffer(&decoder, targetFuncAddress, length,
 		&instruction)))
 		return;
 
@@ -50,7 +51,7 @@ inline void Hook::HookFunction(const std::string targetFunction, const DWORD_PTR
 
 
 #if defined(_WIN64)
-	byte jmp[] = { 0x48, 0xB8, 0xCC, 0xCC, 0xCC, 0xCC, 0xCC, 0xCC, 0xCC, 0xCC, 0xFF, 0xE0 };
+	byte jmp[] = {0x48, 0xB8, 0xCC, 0xCC, 0xCC, 0xCC, 0xCC, 0xCC, 0xCC, 0xCC, 0xFF, 0xE0};
 	DWORD old;
 	VirtualProtectEx(GetCurrentProcess(), reinterpret_cast<LPVOID>(nextInstruction), 100, PAGE_EXECUTE_READWRITE, &old);
 	memcpy_s(reinterpret_cast<PVOID>(nextInstruction), 2, jmp, 2);
@@ -76,8 +77,8 @@ inline Hook::Hook()
 	TCHAR sys[MAX_PATH + 2]{};
 	GetSystemDirectory(sys, MAX_PATH + 2);
 
-	auto randomNtdllPath = std::wstring{ tmp } + GenRandStr(4) + L".dll";
-	auto ntdllPath = std::wstring{ sys } + L"\\ntdll.dll";
+	auto randomNtdllPath = std::wstring{tmp} + GenRandStr(4) + L".dll";
+	auto ntdllPath = std::wstring{sys} + L"\\ntdll.dll";
 	CopyFile(ntdllPath.c_str(), randomNtdllPath.c_str(), FALSE);
 	ntdllCopyModule = LoadLibrary(randomNtdllPath.c_str()); // for us ;)
 	NtdllModule = LoadLibrary(L"ntdll");
@@ -88,8 +89,8 @@ inline Hook::Hook()
 	}
 
 
-	auto randomKernelBasePath = std::wstring{ tmp } + GenRandStr(5) + L".dll";
-	auto kernelBasePath = std::wstring{ sys } + L"\\kernelbase.dll";
+	auto randomKernelBasePath = std::wstring{tmp} + GenRandStr(5) + L".dll";
+	auto kernelBasePath = std::wstring{sys} + L"\\kernelbase.dll";
 	CopyFile(kernelBasePath.c_str(), randomKernelBasePath.c_str(), FALSE);
 	kernelBaseCopyModule = LoadLibrary(randomKernelBasePath.c_str()); // for us ;)
 	KernelBaseModule = LoadLibrary(L"kernelbase");
@@ -125,7 +126,6 @@ inline Hook::Hook()
 #else
 	ZydisDecoderInit(&decoder, ZYDIS_MACHINE_MODE_LEGACY_32, ZYDIS_ADDRESS_WIDTH_32);
 #endif
-
 }
 
 inline bool Hook::HookFuncs() const

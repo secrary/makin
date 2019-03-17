@@ -14,7 +14,7 @@
 #include <cstdio>
 #include <tchar.h>
 
-// TODO: reference additional headers your program requires here
+// TODO(MACHINE_32): reference additional headers your program requires here
 
 #include <Psapi.h>
 #include <Shlwapi.h>

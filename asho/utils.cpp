@@ -8,7 +8,7 @@ std::string AddressToHexString(const DWORD_PTR address)
 #else
 	sprintf_s(hexAddress, "0x%I32x", address);
 #endif
-	std::string str{ hexAddress };
+	std::string str{hexAddress};
 
 	return str;
 }
@@ -34,10 +34,11 @@ TCHAR* NormalizeRegPath(const LPCTSTR regPath)
 	const auto normalPath = new TCHAR[pathSize + 1]{};
 	for (size_t i = 0; i < pathSize; i++)
 	{
-		if (regPath[i] == *(L"/"))
+		if (regPath[i] == *(L"/")) {
 			normalPath[i] = *(L"\\");
-		else
+		} else {
 			normalPath[i] = regPath[i];
+}
 	}
 	return normalPath;
 }
