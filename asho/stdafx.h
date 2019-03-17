@@ -24,5 +24,6 @@
 #include <ctime>
 #include <Strsafe.h>
 #include <intrin.h>
+#include <string>
 
 #pragma comment(lib, "Shlwapi.lib")

@@ -308,9 +308,24 @@ LONG WINAPI HookNtSetInformationThread(
 
 	if (ThreadInformationClass == ThreadHideFromDebugger)
 	{
+		if (GetThreadId(ThreadHandle) == 0)
+		{
+			auto msg_out = "[ThreadHideFromDebugger:Invalid_Thread] Calling ThreadHideFromDebugger with invalid thread handle: " + AddressToHexString(DWORD_PTR(ThreadHandle)) + "\n";
+			OutputDebugStringA(msg_out.c_str());
+
+			return STATUS_INVALID_PARAMETER;
+		}
+		if (ThreadInformationLength > 0)
+		{
+			auto msg_out = "[ThreadHideFromDebugger:Invalid_Information_Size] Calling ThreadHideFromDebugger with invalid ThreadInfoSize: " + AddressToHexString(DWORD_PTR(ThreadInformationLength)) + "\n";
+			OutputDebugStringA(msg_out.c_str());
+
+			return STATUS_INVALID_PARAMETER;
+		}
+
 		OutputDebugString(
 			L"[ThreadHideFromDebugger] The debuggee attempts to hide/escape\n\tref: The \"Ultimate\" Anti-Debugging Reference: 7.F.iii\n");
-		return 1;
+		return STATUS_SUCCESS;
 	}
 	// .... 
 	return setInfoThread(ThreadHandle, ThreadInformationClass, ThreadInformation, ThreadInformationLength);
@@ -584,11 +599,15 @@ ULONG WINAPI HookNtQueryObject(
 		OutputDebugString(
 			L"[NtQueryObject:ObjectTypeInformation] The debugee attempts to detect a debugger\n\tref: https://goo.gl/krE6JM \n");
 
+		POBJECT_TYPE_INFORMATION(ObjectInformation)->TotalNumberOfObjects = 1; // 0 is suspicious
+
 	}
 	else if (ntCreateDbgObjectCalled && ObjectInformationClass == ObjectTypesInformation)
 	{
 		OutputDebugString(
 			L"[NtQueryObject:ObjectTypesInformation] The debugee attempts to detect a debugger\n");
+
+		POBJECT_ALL_INFORMATION(ObjectInformation)->NumberOfObjects = 1; // 0 is suspicious
 	}
 
 	return Status;

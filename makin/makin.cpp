@@ -239,6 +239,7 @@ void SetHardwareBreakpoint(HANDLE tHandle, CONTEXT& cxt, const DWORD_PTR addr, s
 
 int _tmain()
 {
+
 	// welcome 
 	const TCHAR welcome[] = L"makin --- Copyright (c) 2019 Lasha Khasaia\n"
 		L"https://www.secrary.com - @_qaz_qaz\n"
@@ -592,9 +593,8 @@ int _tmain()
 					{
 						break;
 					}
-					cxt.ContextFlags = CONTEXT_DEBUG_REGISTERS;
+					cxt.ContextFlags = CONTEXT_ALL;
 					GetThreadContext(tHandle, &cxt);
-					CloseHandle(tHandle);
 
 					if ((cxt.Dr6 & 0b1111) != 0u)
 					{
@@ -630,10 +630,16 @@ int _tmain()
 						{
 							printf("DR3\n"); // Not implemented yet
 						}
+#ifdef _WIN64
+						cxt.Rax = 0; // maybe works on most cases
+#else
+						cxt.Eax = 0;
+#endif
+						SetThreadContext(tHandle, &cxt);
 
-						break;
 					}
 
+					CloseHandle(tHandle);
 					break;
 
 				case DBG_CONTROL_C:
