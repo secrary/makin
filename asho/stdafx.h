@@ -11,7 +11,7 @@
 // Windows Header Files:
 #include <windows.h>
 
-#include <stdio.h>
+#include <cstdio>
 #include <tchar.h>
 
 // TODO: reference additional headers your program requires here
@@ -20,13 +20,9 @@
 #include <Shlwapi.h>
 #include <TlHelp32.h>
 #include <vector>
-#include "Header.h"
 #include <memory>
 #include <ctime>
 #include <Strsafe.h>
 #include <intrin.h>
-
-#include <zydis/Zydis.h>
-#include <nlohmann/json.hpp>
 
 #pragma comment(lib, "Shlwapi.lib")

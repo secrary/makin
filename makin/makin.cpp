@@ -145,17 +145,19 @@ VOID ProcessOutputString(const PROCESS_INFORMATION pi, const OUTPUT_DEBUG_STRING
 }
 }
 
-VOID GenRandStr(TCHAR* str, const size_t size) // just enough randomness
+std::wstring GenRandStr(const size_t size) // just enough randomness
 {
 	srand(static_cast<unsigned int>(time(nullptr)));
-	static const TCHAR syms[] =
+	static const TCHAR ALPHABET[] =
 		L"ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 		L"abcdefghijklmnopqrstuvwxyz";
-	for (size_t i = 0; i < size - 1; ++i)
+	std::wstring randString(size, '\x0');
+	for (auto& i : randString)
 	{
-		str[i] = syms[rand() / (RAND_MAX / (_tcslen(syms) - 1) + 1)];
+		i = ALPHABET[rand() / (RAND_MAX / (_tcslen(ALPHABET) - 1) + 1)];
 	}
-	str[size - 1] = 0;
+
+	return randString;
 }
 
 void SetHardwareBreakpoint(HANDLE tHandle, CONTEXT& cxt, const DWORD_PTR addr, size_t size, DrReg dbgReg)
@@ -418,13 +420,10 @@ int _tmain()
 	}
 
 	// generate random name for asho.dll ;)
-	TCHAR randAsho[0x5]{};
-	GenRandStr(randAsho, 0x5);
 	TCHAR ashoTmpDir[MAX_PATH + 2]{};
 	GetTempPath(MAX_PATH + 2, ashoTmpDir);
-	_tcscat_s(ashoTmpDir, randAsho);
-	_tcscat_s(ashoTmpDir, L".dll");
-	const auto cStatus = CopyFile(dll_path, ashoTmpDir, FALSE);
+	auto ashoPath = std::wstring{ ashoTmpDir } + GenRandStr(6) + L".dll";
+	const auto cStatus = CopyFile(dll_path, ashoPath.c_str(), FALSE);
 	if (cStatus == 0)
 	{
 		err = GetLastError();
@@ -432,10 +431,10 @@ int _tmain()
 
 		return err;
 	}
-	if (!PathFileExists(ashoTmpDir))
+	if (!PathFileExists(ashoPath.c_str()))
 	{
 		err = GetLastError();
-		wprintf(L"[!] %s is not a valid file\n", ashoTmpDir);
+		wprintf(L"[!] %s is not a valid file\n", ashoPath.c_str());
 
 		return err;
 	}
@@ -447,7 +446,7 @@ int _tmain()
 		printf("[!] Allocation failed: %lu\n", err);
 		return err;
 	}
-	if (WriteProcessMemory(pi.hProcess, p_alloc, ashoTmpDir, MAX_PATH + 2, nullptr) == 0)
+	if (WriteProcessMemory(pi.hProcess, p_alloc, ashoPath.c_str(), MAX_PATH + 2, nullptr) == 0)
 	{
 		err = GetLastError();
 		printf("WriteProcessMemory failed: %lu\n", err);
