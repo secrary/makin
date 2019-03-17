@@ -17,4 +17,4 @@ nlohmann::json jsObject{};
 
 std::string AddressToHexString(DWORD_PTR address);
 std::wstring GenRandStr(size_t size);
-TCHAR* NormalizeRegPath(LPCTSTR regPath);
+TCHAR* NormalizeRegPath(const LPCTSTR regPath);
