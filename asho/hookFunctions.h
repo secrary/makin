@@ -439,7 +439,7 @@ LONG WINAPI HookNtSystemDebugControl(
 BOOL HookNtYieldExecution()
 {
 	typedef BOOL xNtYieldExecutionAPI();
-	const auto nYExec = reinterpret_cast<xNtYieldExecutionAPI*>(GetProcAddress(ntdllCopyModule, "NtYieldExecutionAPI"));
+	const auto nYExec = reinterpret_cast<xNtYieldExecutionAPI*>(GetProcAddress(ntdllCopyModule, "NtYieldExecution"));
 
 	OutputDebugStringA(
 		"[NtYieldExecutionAPI] Unreliable method for detecting a debugger\n\tref: The \"Ultimate\" Anti-Debugging Reference: 7.D.xiii\n");
@@ -584,8 +584,11 @@ ULONG WINAPI HookNtQueryObject(
 		OutputDebugString(
 			L"[NtQueryObject:ObjectTypeInformation] The debugee attempts to detect a debugger\n\tref: https://goo.gl/krE6JM \n");
 
-		//const auto objectType = static_cast<POBJECT_TYPE_INFORMATION>(ObjectInformation);
-		//objectType->TotalNumberOfObjects = 1;  // TODO: crashes on 0x64
+	}
+	else if (ntCreateDbgObjectCalled && ObjectInformationClass == ObjectTypesInformation)
+	{
+		OutputDebugString(
+			L"[NtQueryObject:ObjectTypesInformation] The debugee attempts to detect a debugger\n");
 	}
 
 	return Status;

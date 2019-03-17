@@ -157,7 +157,7 @@ inline bool Hook::HookFuncs() const
 	//// kernelbase
 	HookFunction("IsDebuggerPresent", DWORD_PTR(HookIsDebuggerPresent), "kernelbase");
 	HookFunction("CheckRemoteDebuggerPresent", DWORD_PTR(HookCheckRemoteDebuggerPresent), "kernelbase");
-	//HookFunction("SetUnhandledExceptionFilter", DWORD_PTR(hookSetUnhandledExceptionFilter), "kernelbase");
+	HookFunction("SetUnhandledExceptionFilter", DWORD_PTR(hookSetUnhandledExceptionFilter), "kernelbase");
 	//// what about hooking Rtl version from ntdll?
 
 	//// registry checks
