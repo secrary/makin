@@ -30,7 +30,7 @@ inline void SetBits(DWORD_PTR& dw, const DWORD_PTR lowBit, const DWORD_PTR bits,
 
 VOID ProcessOutputString(const PROCESS_INFORMATION pi, const OUTPUT_DEBUG_STRING_INFO out_info)
 {
-	std::unique_ptr<CHAR> pMsg{new CHAR[out_info.nDebugStringLength * sizeof(CHAR)]};
+	std::unique_ptr<CHAR[]> pMsg {new CHAR[out_info.nDebugStringLength * sizeof(CHAR)]};
 
 	ReadProcessMemory(pi.hProcess, out_info.lpDebugStringData, pMsg.get(), out_info.nDebugStringLength, nullptr);
 
@@ -284,7 +284,7 @@ int _tmain()
 		(
 			DWORD));
 	UnmapViewOfFile(lpMapAddress);
-
+	
 
 	const auto ntMapAddrLow = (e_lfanew / sysInfo.dwAllocationGranularity) * sysInfo.dwAllocationGranularity;
 	lpMapAddress = MapViewOfFile(hMapFile,
@@ -310,7 +310,7 @@ int _tmain()
 	{
 		printf(
 			"[TLS] The executable contains TLS callback(s)\nI can not hook code executed by TLS callbacks\nPlease, abort execution and check it manually\n[c]ontinue / [A]bort: \n\n");
-		const char ic = getchar();
+		const auto ic = getchar();
 		if (ic != 'c') {
 			ExitProcess(0);
 		}
@@ -319,6 +319,7 @@ int _tmain()
 	const DWORD_PTR sizeOfImage = PIMAGE_NT_HEADERS(ntHeaderAddr)->OptionalHeader.SizeOfImage;
 
 	UnmapViewOfFile(lpMapAddress);
+	CloseHandle(hMapFile);
 	CloseHandle(hFile);
 
 	wprintf(L"PROCESS NAME: %s\nCOMMAND LINE: %s\n\n", proc_path, cmdLine);
